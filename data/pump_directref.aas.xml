@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<aas:aasenv xmlns:aas="http://www.admin-shell.io/aas/3/0" xmlns:IEC61360="http://www.admin-shell.io/IEC61360/3/0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.admin-shell.io/aas/3/0 AAS.xsd http://www.admin-shell.io/IEC61360/3/0 IEC61360.xsd">
+  <aas:assetAdministrationShells>
+    <aas:assetAdministrationShell>
+      <aas:idShort>Pump</aas:idShort>
+      <aas:description>
+        <aas:langString lang="de">Zahnradpumpe Gusskoerper</aas:langString>
+      </aas:description>
+      <aas:identification idType="IRI">https://example.com/ids/aas/3335_3111_5012_7479</aas:identification>
+      <!--aas:assetInformation> required, paste key and uncomment
+      <aas:assetInformation>
+        <aas:globalAssetId>
+          <aas:keys>
+            <aas:key idType="IRI" type="Asset"></aas:key>
+          </aas:keys>
+        </aas:globalAssetId>
+        <aas:assetKind>Instance</aas:assetKind>
+      </aas:assetInformation>
+      </aas:assetInformation!-->
+      <aas:submodelRefs>
+        <aas:submodelRef>
+          <aas:keys>
+            <aas:key type="Submodel" local="true" idType="IRI">https://example.com/ids/sm/5064_5150_5012_7130</aas:key>
+          </aas:keys>
+        </aas:submodelRef>
+      </aas:submodelRefs>
+    </aas:assetAdministrationShell>
+  </aas:assetAdministrationShells>
+  <aas:assets />
+  <aas:submodels>
+    <aas:submodel>
+      <aas:idShort>TechnicalData</aas:idShort>
+      <aas:identification idType="IRI">https://example.com/ids/sm/5064_5150_5012_7130</aas:identification>
+      <aas:kind>Instance</aas:kind>
+      <aas:semanticId>
+        <aas:keys />
+      </aas:semanticId>
+      <aas:qualifier />
+      <aas:submodelElements>
+        <aas:submodelElement>
+          <aas:submodelElementCollection>
+            <aas:idShort>GeneralInformation</aas:idShort>
+            <aas:kind>Instance</aas:kind>
+            <aas:semanticId>
+              <aas:keys />
+            </aas:semanticId>
+            <aas:qualifier />
+            <aas:value>
+              <aas:submodelElement>
+                <aas:property>
+                  <aas:idShort>ManufacturerName</aas:idShort>
+                  <aas:category>PARAMETER</aas:category>
+                  <aas:kind>Instance</aas:kind>
+                  <aas:semanticId>
+                    <aas:keys />
+                  </aas:semanticId>
+                  <aas:qualifier />
+                  <aas:valueType>string</aas:valueType>
+                  <aas:value>ASM DIMATEC</aas:value>
+                </aas:property>
+              </aas:submodelElement>
+              <aas:submodelElement>
+                <aas:property>
+                  <aas:idShort>ManufacturerOrderCode</aas:idShort>
+                  <aas:kind>Instance</aas:kind>
+                  <aas:semanticId>
+                    <aas:keys />
+                  </aas:semanticId>
+                  <aas:qualifier />
+                  <aas:valueType>string</aas:valueType>
+                  <aas:value>ZK-05-25-KL</aas:value>
+                </aas:property>
+              </aas:submodelElement>
+            </aas:value>
+            <aas:ordered>false</aas:ordered>
+            <aas:allowDuplicates>false</aas:allowDuplicates>
+          </aas:submodelElementCollection>
+        </aas:submodelElement>
+        <aas:submodelElement>
+          <aas:submodelElementCollection>
+            <aas:idShort>TechnicalProperties</aas:idShort>
+            <aas:kind>Instance</aas:kind>
+            <aas:semanticId>
+              <aas:keys />
+            </aas:semanticId>
+            <aas:qualifier />
+            <aas:value>
+              <aas:submodelElement>
+                <aas:property>
+                  <aas:idShort>MaxThroughput</aas:idShort>
+                  <aas:category>CONSTANT</aas:category>
+                  <aas:kind>Instance</aas:kind>
+                  <aas:semanticId>
+                    <aas:keys />
+                  </aas:semanticId>
+                  <aas:qualifier />
+                  <aas:valueType>float</aas:valueType>
+                  <aas:value>97.0</aas:value>
+                </aas:property>
+              </aas:submodelElement>
+            </aas:value>
+            <aas:ordered>false</aas:ordered>
+            <aas:allowDuplicates>false</aas:allowDuplicates>
+          </aas:submodelElementCollection>
+        </aas:submodelElement>
+        <aas:submodelElement>
+          <aas:submodelElementCollection>
+            <aas:idShort>SubelementRequirements</aas:idShort>
+            <aas:kind>Instance</aas:kind>
+            <aas:semanticId>
+              <aas:keys />
+            </aas:semanticId>
+            <aas:qualifier />
+            <aas:value>
+              <aas:submodelElement>
+                <aas:submodelElementCollection>
+                  <aas:idShort>FrictionBearingRequirements</aas:idShort>
+                  <aas:kind>Instance</aas:kind>
+                  <aas:semanticId>
+                    <aas:keys />
+                  </aas:semanticId>
+                  <aas:qualifier />
+                  <aas:value>
+                    <aas:submodelElement>
+                      <aas:property>
+                        <aas:idShort>InnerDiameter</aas:idShort>
+                        <aas:category>PARAMETER</aas:category>
+                        <aas:kind>Instance</aas:kind>
+                        <aas:semanticId>
+                          <aas:keys>
+                            <aas:key type="GlobalReference" local="false" idType="IRDI">0173-1#02-BAA563#005</aas:key>
+                          </aas:keys>
+                        </aas:semanticId>
+                        <aas:qualifier />
+                        <aas:valueType>integer</aas:valueType>
+                        <aas:value>30</aas:value>
+                      </aas:property>
+                    </aas:submodelElement>
+                    <aas:submodelElement>
+                      <aas:property>
+                        <aas:idShort>OuterDiameter</aas:idShort>
+                        <aas:category>PARAMETER</aas:category>
+                        <aas:kind>Instance</aas:kind>
+                        <aas:semanticId>
+                          <aas:keys>
+                            <aas:key type="GlobalReference" local="false" idType="IRDI">0173-1#02-BAB376#006</aas:key>
+                          </aas:keys>
+                        </aas:semanticId>
+                        <aas:qualifier />
+                        <aas:valueType>integer</aas:valueType>
+                        <aas:value>34</aas:value>
+                      </aas:property>
+                    </aas:submodelElement>
+                    <aas:submodelElement>
+                      <aas:property>
+                        <aas:idShort>Width</aas:idShort>
+                        <aas:category>PARAMETER</aas:category>
+                        <aas:kind>Instance</aas:kind>
+                        <aas:semanticId>
+                          <aas:keys>
+                            <aas:key type="GlobalReference" local="false" idType="IRDI">0173-1#02-AAO032#004</aas:key>
+                          </aas:keys>
+                        </aas:semanticId>
+                        <aas:qualifier />
+                        <aas:valueType>integer</aas:valueType>
+                        <aas:value>30</aas:value>
+                      </aas:property>
+                    </aas:submodelElement>
+                    <aas:submodelElement>
+                      <aas:property>
+                        <aas:idShort>Material</aas:idShort>
+                        <aas:category>PARAMETER</aas:category>
+                        <aas:kind>Instance</aas:kind>
+                        <aas:semanticId>
+                          <aas:keys />
+                        </aas:semanticId>
+                        <aas:qualifier />
+                        <aas:valueType>string</aas:valueType>
+                        <aas:value>P14</aas:value>
+                      </aas:property>
+                    </aas:submodelElement>
+                    <aas:submodelElement>
+                      <aas:property>
+                        <aas:idShort>Material</aas:idShort>
+                        <aas:category>PARAMETER</aas:category>
+                        <aas:kind>Instance</aas:kind>
+                        <aas:semanticId>
+                          <aas:keys />
+                        </aas:semanticId>
+                        <aas:qualifier />
+                        <aas:valueType>string</aas:valueType>
+                        <aas:value>P20</aas:value>
+                      </aas:property>
+                    </aas:submodelElement>
+                    <aas:submodelElement>
+                      <aas:property>
+                        <aas:idShort>MaxRotationSpeed</aas:idShort>
+                        <aas:category>PARAMETER</aas:category>
+                        <aas:description>
+                          <aas:langString lang="en">v = n * d1 * π/(60 * 1000) [m/s]</aas:langString>
+                        </aas:description>
+                        <aas:kind>Instance</aas:kind>
+                        <aas:semanticId>
+                          <aas:keys />
+                        </aas:semanticId>
+                        <aas:qualifier />
+                        <aas:valueType>integer</aas:valueType>
+                        <aas:value>3</aas:value>
+                      </aas:property>
+                    </aas:submodelElement>
+                    <aas:submodelElement>
+                      <aas:relationshipElement>
+                        <aas:idShort>AssignedModule</aas:idShort>
+                        <aas:category>CONSTANT</aas:category>
+                        <aas:kind>Instance</aas:kind>
+                        <aas:semanticId>
+                          <aas:keys />
+                        </aas:semanticId>
+                        <aas:qualifier />
+                        <aas:first>
+                          <aas:keys>
+                            <aas:key type="AssetAdministrationShell" local="true" idType="IRI">https://example.com/ids/aas/3335_3111_5012_7479</aas:key>
+                          </aas:keys>
+                        </aas:first>
+                        <aas:second>
+                          <aas:keys>
+                            <aas:key type="AssetAdministrationShell" local="false" idType="IRI">https://example.com/ids/aas/1035_3111_5012_8830</aas:key>
+                          </aas:keys>
+                        </aas:second>
+                      </aas:relationshipElement>
+                    </aas:submodelElement>
+                    <aas:submodelElement>
+                      <aas:range>
+                        <aas:idShort>TemperatureRange</aas:idShort>
+                        <aas:category>PARAMETER</aas:category>
+                        <aas:kind>Instance</aas:kind>
+                        <aas:semanticId>
+                          <aas:keys>
+                            <aas:key type="GlobalReference" local="false" idType="IRDI">0173-1#02-AAO931#001</aas:key>
+                          </aas:keys>
+                        </aas:semanticId>
+                        <aas:valueType>integer</aas:valueType>
+                        <aas:min>-10</aas:min>
+                        <aas:max>100</aas:max>
+                      </aas:range>
+                    </aas:submodelElement>
+                  </aas:value>
+                  <aas:ordered>false</aas:ordered>
+                  <aas:allowDuplicates>false</aas:allowDuplicates>
+                </aas:submodelElementCollection>
+              </aas:submodelElement>
+            </aas:value>
+            <aas:ordered>false</aas:ordered>
+            <aas:allowDuplicates>false</aas:allowDuplicates>
+          </aas:submodelElementCollection>
+        </aas:submodelElement>
+      </aas:submodelElements>
+    </aas:submodel>
+  </aas:submodels>
+  <aas:conceptDescriptions />
+</aas:aasenv>
