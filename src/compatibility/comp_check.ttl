@@ -1,0 +1,180 @@
+@prefix aas: <https://admin-shell.io/aas/3/0/RC01/> .
+@prefix iec61360: <https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/> .
+@prefix phys_unit: <https://admin-shell.io/DataSpecificationTemplates/DataSpecificationPhysicalUnit/3/0/RC01/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix aasaas: <https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/> .
+@prefix aassm: <https://admin-shell.io/aas/3/0/RC01/Submodel/> .
+@prefix aassmc: <https://admin-shell.io/aas/3/0/RC01/SubmodelElementCollection/> .
+@prefix aasrefer: <https://admin-shell.io/aas/3/0/RC01/Referable/> .
+@prefix aasrel: <https://admin-shell.io/aas/3/0/RC01/RelationshipElement/> .
+@prefix aasdata: <https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/> .
+@prefix aasprop: <https://admin-shell.io/aas/3/0/RC01/Property/> .
+@prefix aasrange: <https://admin-shell.io/aas/3/0/RC01/Range/> .
+@prefix aassem: <https://admin-shell.io/aas/3/0/RC01/HasSemantics/> .
+
+# Metadata
+<https://admin-shell.io/aas/3/0/RC01/> a owl:Ontology ;
+  owl:imports <http://datashapes.org/dash> ;
+  owl:imports sh: ;
+  sh:declare [
+    a sh:PrefixDeclaration ;
+    sh:namespace "https://admin-shell.io/aas/3/0/RC01/"^^xsd:anyURI ;
+    sh:prefix "aas"^^xsd:string ;
+  ] ;
+    sh:declare [
+    a sh:PrefixDeclaration ;
+    sh:namespace "https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/"^^xsd:anyURI ;
+    sh:prefix "aasaas"^^xsd:string ;
+  ] ;
+    sh:declare [
+    a sh:PrefixDeclaration ;
+    sh:namespace "https://admin-shell.io/aas/3/0/RC01/Submodel/"^^xsd:anyURI ;
+    sh:prefix "aassm"^^xsd:string ;
+  ] ;
+  sh:declare [
+    a sh:PrefixDeclaration ;
+    sh:namespace "https://admin-shell.io/aas/3/0/RC01/SubmodelElementCollection/"^^xsd:anyURI ;
+    sh:prefix "aassmc"^^xsd:string ;
+  ] ;
+  sh:declare [
+    a sh:PrefixDeclaration ;
+    sh:namespace "https://admin-shell.io/aas/3/0/RC01/Referable/"^^xsd:anyURI ;
+    sh:prefix "aasrefer"^^xsd:string ;
+  ] ;
+  sh:declare [
+    a sh:PrefixDeclaration ;
+    sh:namespace "https://admin-shell.io/aas/3/0/RC01/RelationshipElement/"^^xsd:anyURI ;
+    sh:prefix "aasrel"^^xsd:string ;
+  ] ;
+  sh:declare [
+    a sh:PrefixDeclaration ;
+    sh:namespace "https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/"^^xsd:anyURI ;
+    sh:prefix "aasdata"^^xsd:string ;
+  ] ;
+  sh:declare [
+    a sh:PrefixDeclaration ;
+    sh:namespace "https://admin-shell.io/aas/3/0/RC01/Property/"^^xsd:anyURI ;
+    sh:prefix "aasprop"^^xsd:string ;
+  ] ;
+  sh:declare [
+    a sh:PrefixDeclaration ;
+    sh:namespace "https://admin-shell.io/aas/3/0/RC01/Range/"^^xsd:anyURI ;
+    sh:prefix "aasrange"^^xsd:string ;
+  ] ;
+  sh:declare [
+    a sh:PrefixDeclaration ;
+    sh:namespace "https://admin-shell.io/aas/3/0/RC01/HasSemantics/"^^xsd:anyURI ;
+    sh:prefix "aassem"^^xsd:string ;
+  ] ;
+.
+
+aas:AggregateAasShape a sh:NodeShape ;
+  sh:targetClass aas:DataElement ;
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "Submodel: {?aas_part} does not meet interface requirements of {?aas_whole} wrt {?this}." ;
+    sh:prefixes aas: , aasaas: , aassm: , aassmc: , aasrefer: , aasrel: , aasdata: , aasprop: , aasrange: , aassem: ;
+    sh:select  """ 
+
+SELECT DISTINCT ?aas_whole ?aas_part ?this
+WHERE {
+    ?aas_whole a aas:AssetAdministrationShell ; 
+        aasaas:submodel ?sm_whole . 
+    ?sm_whole a aas:Submodel ; 
+        aassm:submodelElement ?smreq . 
+    ?smreq a aas:SubmodelElementCollection ; 
+        aasrefer:idShort "SubelementRequirements" ; 
+        aassmc:value ?reqs . 
+    ?reqs a aas:SubmodelElementCollection ; 
+        aassmc:value ?part_rel . 
+    ?part_rel a aas:RelationshipElement ; 
+        aasrefer:idShort "AssignedModule" ;
+        aasrel:first ?aas_whole ;
+        aasrel:second ?aas_part . 
+
+    ?aas_part a aas:AssetAdministrationShell ; 
+        aasdata:semanticIdValue ?aas_part_id ; 
+        aasaas:submodel ?sm_part . 
+    ?sm_part a aas:Submodel ; 
+        aassm:submodelElement ?techprop . 
+    ?techprop a aas:SubmodelElementCollection ; 
+        aasrefer:idShort "TechnicalProperties" . 
+
+    # value - value comparison
+    {
+        ?reqs aassmc:value ?this . 
+        ?this a aas:Property ; 
+            aassem:semanticIdValue ?semid_whole ; 
+            aasprop:value ?val_whole . 
+        ?techprop aassmc:value ?prop_part . 
+        ?prop_part a aas:Property ; 
+            aassem:semanticIdValue ?semid_part ; 
+            aasprop:value ?val_part . 
+        FILTER (?semid_whole = ?semid_part && ?val_whole != ?val_part)
+    }
+    UNION
+    # value (part) - range (whole) comparison
+    {
+        ?reqs aassmc:value ?this . 
+        ?this a aas:Range ; 
+            aassem:semanticIdValue ?semid_whole ; 
+            aasrange:min ?min_whole ; 
+            aasrange:max ?max_whole . 
+        ?techprop aassmc:value ?prop_part . 
+        ?prop_part a aas:Property ; 
+            aassem:semanticIdValue ?semid_part ; 
+            aasprop:value ?val_part . 
+        FILTER (?semid_whole = ?semid_part && (?min_whole < ?val_part || ?max_whole > ?val_part))
+    }
+    UNION
+    # range (whole) - value (part) comparison
+    {
+        ?reqs aassmc:value ?this . 
+        ?this a aas:Property ; 
+            aassem:semanticIdValue ?semid_whole ; 
+            aasprop:value ?val_whole . 
+        ?techprop aassmc:value ?prop_part . 
+        ?prop_part a aas:Range ; 
+            aassem:semanticIdValue ?semid_part ; 
+            aasrange:min ?min_part ; 
+            aasrange:max ?max_part . 
+        FILTER (?semid_whole = ?semid_part && (?val_whole > ?min_part || ?val_whole < ?max_part))
+    }
+    UNION
+    # range - range comparison
+    {
+        ?reqs aassmc:value ?this . 
+        ?this a aas:Range ; 
+            aassem:semanticIdValue ?semid_whole ; 
+            aasrange:min ?min_whole ; 
+            aasrange:max ?max_whole . 
+        ?techprop aassmc:value ?prop_part . 
+        ?prop_part a aas:Range ; 
+            aassem:semanticIdValue ?semid_part ; 
+            aasrange:min ?min_part ; 
+            aasrange:max ?max_part . 
+        FILTER (?semid_whole = ?semid_part && (?min_whole < ?min_part || ?max_whole > ?max_part))
+    }
+
+    # ensure that every aas_part has all the props required
+    UNION
+    {
+        ?reqs aassmc:value ?this . 
+        ?this aassem:semanticIdValue ?semid_whole . 
+
+        FILTER NOT EXISTS {
+            ?techprop aassmc:value ?prop_part . 
+            ?prop_part aassem:semanticIdValue ?semid_whole . 
+        }
+    }
+}
+
+
+    """ ;
+  ] ;
+.

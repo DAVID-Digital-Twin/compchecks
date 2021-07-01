@@ -4,3 +4,6 @@
 # ignore by filetype
 *.ttl
 
+# individual files
+!src/compatibility/comp_check.ttl
+

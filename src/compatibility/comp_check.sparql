@@ -1,0 +1,104 @@
+PREFIX aas: <https://admin-shell.io/aas/3/0/RC01/>
+PREFIX aasaas: <https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/>
+PREFIX aassm: <https://admin-shell.io/aas/3/0/RC01/Submodel/>
+PREFIX aassmc: <https://admin-shell.io/aas/3/0/RC01/SubmodelElementCollection/>
+PREFIX aasrefer: <https://admin-shell.io/aas/3/0/RC01/Referable/>
+PREFIX aasrel: <https://admin-shell.io/aas/3/0/RC01/RelationshipElement/>
+PREFIX aasdata: <https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/>
+PREFIX aasprop: <https://admin-shell.io/aas/3/0/RC01/Property/>
+PREFIX aasrange: <https://admin-shell.io/aas/3/0/RC01/Range/>
+PREFIX aassem: <https://admin-shell.io/aas/3/0/RC01/HasSemantics/>
+
+SELECT DISTINCT ?aas_whole ?aas_part
+WHERE {
+    ?aas_whole a aas:AssetAdministrationShell ; 
+        aasaas:submodel ?sm_whole . 
+    ?sm_whole a aas:Submodel ; 
+        aassm:submodelElement ?smreq . 
+    ?smreq a aas:SubmodelElementCollection ; 
+        aasrefer:idShort "SubelementRequirements" ; 
+        aassmc:value ?reqs . 
+    ?reqs a aas:SubmodelElementCollection ; 
+        aassmc:value ?part_rel . 
+    ?part_rel a aas:RelationshipElement ; 
+        aasrefer:idShort "AssignedModule" ;
+        aasrel:first ?aas_whole ;
+        aasrel:secondValue ?aas_part_req . 
+
+    ?aas_part a aas:AssetAdministrationShell ; 
+        aasdata:semanticIdValue ?aas_part_id ; 
+        aasaas:submodel ?sm_part . 
+    ?sm_part a aas:Submodel ; 
+        aassm:submodelElement ?techprop . 
+    ?techprop a aas:SubmodelElementCollection ; 
+        aasrefer:idShort "TechnicalProperties" . 
+
+    # value - value comparison
+    FILTER NOT EXISTS {
+        ?reqs aassmc:value ?prop_whole . 
+        ?prop_whole a aas:Property ; 
+            aassem:semanticIdValue ?semid_whole ; 
+            aasprop:value ?val_whole . 
+        ?techprop aassmc:value ?prop_part . 
+        ?prop_part a aas:Property ; 
+            aassem:semanticIdValue ?semid_part ; 
+            aasprop:value ?val_part . 
+        FILTER (?aas_part_req = ?aas_part_id && ?semid_whole = ?semid_part && ?val_whole != ?val_part)
+    }
+
+    # value - range comparison
+    FILTER NOT EXISTS {
+        ?reqs aassmc:value ?prop_whole . 
+        ?prop_whole a aas:Range ; 
+            aassem:semanticIdValue ?semid_whole ; 
+            aasrange:min ?min_whole ; 
+            aasrange:max ?max_whole . 
+        ?techprop aassmc:value ?prop_part . 
+        ?prop_part a aas:Property ; 
+            aassem:semanticIdValue ?semid_part ; 
+            aasprop:value ?val_part . 
+        FILTER (?aas_part_req = ?aas_part_id && ?semid_whole = ?semid_part && (?min_whole > ?val_part || ?max_whole < ?val_part))
+    }
+
+    # range - range comparison
+    FILTER NOT EXISTS {
+        ?reqs aassmc:value ?prop_whole . 
+        ?prop_whole a aas:Range ; 
+            aassem:semanticIdValue ?semid_whole ; 
+            aasrange:min ?min_whole ; 
+            aasrange:max ?max_whole . 
+        ?techprop aassmc:value ?prop_part . 
+        ?prop_part a aas:Range ; 
+            aassem:semanticIdValue ?semid_part ; 
+            aasrange:min ?min_part ; 
+            aasrange:max ?max_part . 
+        FILTER (?aas_part_req = ?aas_part_id && ?semid_whole = ?semid_part && (?min_whole < ?min_part || ?max_whole > ?max_part))
+    }
+
+    # set comparisons - valuetype is string
+
+    # make sure that every aas_part has all the props required
+    MINUS {
+        ?reqs aassmc:value ?prop_whole . 
+        {
+            ?prop_whole a aas:Property . 
+        } UNION {
+            ?prop_whole a aas:Range . 
+        }
+        ?prop_whole aassem:semanticIdValue ?semid_whole . 
+
+        ?aas_part aasaas:submodel ?sm_part . 
+        ?sm_part a aas:Submodel ; 
+            aassm:submodelElement ?techprop . 
+        ?techprop a aas:SubmodelElementCollection ; 
+            aasrefer:idShort "TechnicalProperties" . 
+
+        FILTER NOT EXISTS {
+            ?prop_whole aassem:semanticIdValue ?semid_whole . 
+            ?techprop aassmc:value ?prop_part . 
+            ?prop_part a aas:Property ; 
+                aassem:semanticIdValue ?semid_part . 
+            FILTER (?semid_whole = ?semid_part)
+        }
+    }
+}
