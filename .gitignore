@@ -1,0 +1,6 @@
+# ignore by folder
+.venv/
+
+# ignore by filetype
+*.ttl
+
