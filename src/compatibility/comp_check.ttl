@@ -132,7 +132,7 @@ WHERE {
         FILTER (?semid_whole = ?semid_part && (?min_whole < ?val_part || ?max_whole > ?val_part))
     }
     UNION
-    # range (whole) - value (part) comparison
+    # range (part) - value (whole) comparison
     {
         ?reqs aassmc:value ?this . 
         ?this a aas:Property ; 

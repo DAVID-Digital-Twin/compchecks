@@ -46,7 +46,7 @@ WHERE {
         FILTER (?aas_part_req = ?aas_part_id && ?semid_whole = ?semid_part && ?val_whole != ?val_part)
     }
 
-    # value - range comparison
+    # value (part) - range (whole) comparison
     FILTER NOT EXISTS {
         ?reqs aassmc:value ?prop_whole . 
         ?prop_whole a aas:Range ; 
@@ -58,6 +58,20 @@ WHERE {
             aassem:semanticIdValue ?semid_part ; 
             aasprop:value ?val_part . 
         FILTER (?aas_part_req = ?aas_part_id && ?semid_whole = ?semid_part && (?min_whole > ?val_part || ?max_whole < ?val_part))
+    }
+
+    # range (part) - value (whole) comparison
+    FILTER NOT EXISTS {
+        ?reqs aassmc:value ?prop_whole . 
+        ?prop_whole a aas:Property ; 
+            aassem:semanticIdValue ?semid_whole ; 
+            aasprop:value ?val_whole . 
+        ?techprop aassmc:value ?prop_part . 
+        ?prop_part a aas:Range ; 
+            aassem:semanticIdValue ?semid_part ; 
+            aasrange:min ?min_part ; 
+            aasrange:max ?max_part . 
+        FILTER (?aas_part_req = ?aas_part_id && ?semid_whole = ?semid_part && (?min_part > ?val_whole || ?max_part < ?val_whole))
     }
 
     # range - range comparison
@@ -96,8 +110,12 @@ WHERE {
         FILTER NOT EXISTS {
             ?prop_whole aassem:semanticIdValue ?semid_whole . 
             ?techprop aassmc:value ?prop_part . 
-            ?prop_part a aas:Property ; 
-                aassem:semanticIdValue ?semid_part . 
+            {
+                ?prop_part a aas:Property . 
+            } UNION {
+                ?prop_part a aas:Range . 
+            }
+            ?prop_part aassem:semanticIdValue ?semid_part . 
             FILTER (?semid_whole = ?semid_part)
         }
     }
