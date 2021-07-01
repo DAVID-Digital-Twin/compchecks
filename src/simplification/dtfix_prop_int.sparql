@@ -1,0 +1,18 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX aas: <https://admin-shell.io/aas/3/0/RC01/>
+PREFIX aasprop: <https://admin-shell.io/aas/3/0/RC01/Property/>
+PREFIX aasext: <https://admin-shell.io/aas/3/0/RC01/Extension/>
+
+DELETE {
+    ?prop aasprop:value ?val ; 
+        aasext:valueType ?valtype .
+}
+INSERT {
+    ?prop aasprop:value ?properval . 
+}
+WHERE {
+    ?prop aasprop:value ?val ; 
+        aasext:valueType ?valtype .
+    FILTER (?valtype = "integer")
+    BIND(STRDT(STR(?val), xsd:integer) AS ?properval)
+}

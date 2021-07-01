@@ -1,0 +1,22 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX aas: <https://admin-shell.io/aas/3/0/RC01/>
+PREFIX aasrange: <https://admin-shell.io/aas/3/0/RC01/Range/>
+PREFIX aasext: <https://admin-shell.io/aas/3/0/RC01/Extension/>
+
+DELETE {
+    ?prop aasrange:min ?min ; 
+        aasrange:max ?max ; 
+        aasext:valueType ?valtype .
+}
+INSERT {
+    ?prop aasrange:min ?propermin . 
+    ?prop aasrange:max ?propermax . 
+}
+WHERE {
+    ?prop aasrange:min ?min ; 
+        aasrange:max ?max ; 
+        aasext:valueType ?valtype .
+    FILTER (?valtype = "string")
+    BIND(STRDT(STR(?min), xsd:string) AS ?propermin)
+    BIND(STRDT(STR(?max), xsd:string) AS ?propermax)
+}
