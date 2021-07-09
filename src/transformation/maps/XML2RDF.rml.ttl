@@ -1,0 +1,3577 @@
+@prefix aas: <https://admin-shell.io/aas/3/0/RC01/> .
+@prefix tm: <http://ex.com/triplesMap/>.
+@prefix ls: <http://ex.com/logicalSource/>.
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dataspec_iec: <http://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/2/0/DataSpecificationIEC61360/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rami: <https://w3id.org/i40/rami#> .
+@prefix IEC61360: <http://www.admin-shell.io/IEC61360/3/0/> .
+
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
+@prefix fno:     <https://w3id.org/function/ontology#> .
+@prefix grel:    <http://users.ugent.be/~bjdmeest/function/grel.ttl#> .
+@prefix idlab-fn: <http://example.com/idlab/function/> .
+
+@base <https://admin-shell.io/aas/3/0/RC01/> .
+
+############################################ COMMENTS #################################################
+
+# //c/ancestor-or-self::*[./id][1]/id
+
+# Identifier/idType via _:IdentifierType map for explicit idType generation (idTypes already in onto) ?
+# also applies to ModelingKind /kind
+
+
+# hasDataSpecification (inh.) redundancies could be removed by POM with ancestor::*/identification
+# keyElements distinguish between ReferableElements/IdentifiableElements/KeyElements, or just refer to (uppercase) of type value ?
+
+
+# OLD TO DO - check and remove
+# _:fIndex currently only works for unique key values ! (node() passes value instead of node itself, which is used to find node)
+# check mappings for IEC61360 prefix / multiple prefixes/namespaces
+# joins: Security
+# fIRDI - verify 
+# revisit fUpperCase
+# ALLCAPS - non caps assumed/handled inconsistently: either assume correct input or consistently apply function maps 
+#######################################################################################################
+
+
+# 4.7.2 Common Attributes
+
+# HasExtensions (abstract)
+
+_:Extension a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//extension[node()]"
+	] ;
+
+	rr:subjectMap _:fExtension ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Extension ;
+						  ] ;
+	#					  
+
+	# hasSemantics (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasSemantics/semanticId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "name" ; # unique name of Extension (see Constraint AASd-077)
+                                                   	 rr:parent "parent::semanticId/parent::extension/name" ;
+                                                  ] ;
+												] ;
+							] ;
+	#						
+
+	# name*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ 	rr:constant "https://admin-shell.io/aas/3/0/RC01/Extension/name" ] ;
+								rr:objectMap 	[	
+													rml:reference "name" ;
+													rr:datatype xsd:string ;
+												] ;
+							] ;
+	#						
+
+	# valueType
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [	rr:constant "https://admin-shell.io/aas/3/0/RC01/Extension/valueType" ] ;
+								rr:objectMap 	[
+													rml:reference "valueType" ;
+													rr:datatype xsd:string ;
+												] ;
+							] ;
+	#						
+
+	# value
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ 	rr:constant "https://admin-shell.io/aas/3/0/RC01/Extension/value" ] ;
+								rr:objectMap 	[	
+													rml:reference "value" ;
+													rr:datatype xsd:string ;
+												] ;
+							] ;
+	#						
+
+	# refersTo
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Extension/refersTo" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference  ;
+												  rr:joinCondition [
+                                                   	 rr:child "name" ; # unique name of Extension (see Constraint AASd-077)
+                                                   	 rr:parent "parent::refersTo/parent::extension/name" ;
+                                                  ] ;
+												] ;
+							] ;						
+	#
+	.
+#
+
+# 4.7.2.2 Referable Attributes (inh. from HasExtensions) (abstract)
+
+# HasExtensions (inh.) (abstract)
+
+
+_:Referable_idShort a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Referable/idShort" ] ;
+	rr:objectMap 	[ rml:reference "idShort" ;
+					  rr:datatype xsd:string ;
+					] ;
+	.
+#
+
+_:Referable_displayName a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Referable/displayName" ] ;
+	rr:objectMap 	[ rml:reference "displayName/langString" ;
+					  rml:languageMap [ rml:reference "displayName/langString/@lang" ] ;
+					] ;
+	# rr:objectMap [ rr:parentTriplesMap _:langString ; 
+	# 				rr:joinCondition [
+    #                     rr:child "." ;
+    #                     rr:parent "parent::displayName/.." ;
+    #                 ] ;
+	# 				rr:joinCondition [
+	# 					rr:child "ancestor-or-self::*[./idShort][1]/idShort" ;
+	# 					rr:parent "ancestor::*[./idShort][1]/idShort" ;
+	# 				] ;
+	# 				rr:joinCondition [
+	# 					rr:child "ancestor-or-self::*/identification" ;
+	# 					rr:parent "ancestor::*/identification" ;
+	# 				] ;
+	# 			] ;
+	.
+#
+
+_:Referable_category a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Referable/category" ] ;
+	rr:objectMap 	[ rml:reference "category" ;
+					  rr:datatype xsd:string ;
+					] ;
+	.
+#
+
+_:Referable_description a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Referable/description" ] ;
+	rr:objectMap 	[ rml:reference "description/langString" ;
+					  rml:languageMap [ rml:reference "description/langString/@lang" ] ;
+					] ;
+	# rr:objectMap [ rr:parentTriplesMap _:langString ; 
+	# 				rr:joinCondition [
+    #                     rr:child "." ;
+    #                     rr:parent "parent::description/.." ;
+    #                 ] ;
+	# 				rr:joinCondition [
+	# 					rr:child "ancestor-or-self::*[./idShort][1]/idShort" ;
+	# 					rr:parent "ancestor::*[./idShort][1]/idShort" ;
+	# 				] ;
+	# 				rr:joinCondition [
+	# 					rr:child "ancestor-or-self::*/identification" ;
+	# 					rr:parent "ancestor::*/identification" ;
+	# 				] ;
+	# 			] ;
+	.
+#
+
+# 4.7.2.3 Identifiable Attributes (inh. from Referable) (abstract)
+
+_:Identifiable_administration a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant  "https://admin-shell.io/aas/3/0/RC01/Identifiable/administration" ] ;
+	rr:objectMap 	[ rr:parentTriplesMap _:AdministrativeInformation ;
+						rr:joinCondition [
+                                        	rr:child "identification" ;
+                                            rr:parent "parent::*/identification" ;
+                                    	] ;
+					] ;
+	.
+#
+
+_:Identifiable_identification a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Identifiable/identification" ] ;
+	rr:objectMap 	[ rr:parentTriplesMap _:Identifier ;
+						rr:joinCondition [
+                        					rr:child "identification" ;
+                    						rr:parent "." ;
+                        				] ;
+					] ;
+	.
+#
+
+# 4.7.2.4 Identifier Attributes
+
+_:Identifier a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//identification[node()]" ;		
+	] ;
+
+	rr:subjectMap _:fIdentifier ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Identifier ;
+						  ] ;
+	#
+
+	# idType*
+	rr:predicateObjectMap 	[	
+							rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Identifier/idType" ] ;
+							rr:objectMap 	[ rr:template "https://admin-shell.io/aas/3/0/RC01/IdentifierType/{@idType}" ] ;
+							] ;
+	#
+
+	# id*
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Identifier/identifier" ] ;
+							  	rr:objectMap 	[ rml:reference "." ] ;
+							] ;
+	.
+#
+
+_:IdentifierType a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//identification[node()]" ;
+	] ;
+
+	rr:subjectMap [rr:template "https://admin-shell.io/aas/3/0/RC01/IdentifierType/{@idType}"] ;
+	
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:IdentifierType ;
+						  ] ;
+	.
+#
+
+# 4.7.2.5 Template or Instance of Model Element Attributes (HasKind) (abstract)
+
+_:ModelingKind a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//kind[node()]" ;
+	] ;
+
+	rr:subjectMap _:fUpperCaseModelingKind ;
+	
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:ModelingKind ;
+						  ] ;
+	.
+#
+
+# 4.7.2.6 Administrative Information Attributes
+
+_:AdministrativeInformation a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//administration[node()]"
+	] ;
+
+	rr:subjectMap _:fAdministrativeInformation ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:AdministrativeInformation ;
+						  ] ;
+	#
+
+	# hasDataSpecification (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap	[ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/dataSpecification" ] ;
+								rr:objectMap	[ rr:parentTriplesMap _:Reference ;
+								 			   	  rr:joinCondition [
+                                                   	 rr:child "parent::asset/identification" ;
+                                                   	 rr:parent "parent::dataSpecification/ancestor::asset/identification" ;
+                                            		] ;
+												]
+							] ;
+	#
+	
+	# version
+	rr:predicateObjectMap [
+		rr:predicate "https://admin-shell.io/aas/3/0/RC01/AdministrativeInformation/version" ;
+		rr:objectMap	[ rml:reference "version" ] ;
+	] ;
+
+	# revision
+	rr:predicateObjectMap [
+		rr:predicate "https://admin-shell.io/aas/3/0/RC01/AdministrativeInformation/revision" ;
+		rr:objectMap 	[ rml:reference "revision" ] ;
+	] ;
+	.
+#
+
+# 4.7.2.7 HasSemantics (abstract) - mapped explicitly due to specific joins
+# 4.7.2.8 Qualifiable (abstract) - mapped explicitly
+# 4.7.2.9 Constraint (abstract) - subclasses Qualifier and Formula mapped explicitly
+
+# 4.7.2.11 Qualifier Attributes
+
+_:Qualifier a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//qualifier[node()]"
+	] ;
+
+	rr:subjectMap _:fQualifier ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:class aas:Qualifier ;
+						  ] ;
+	#
+
+	# constraint (inh.)
+
+	# hasSemantics (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasSemantics/semanticId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+													rr:child "ancestor-or-self::*/idShort" ;
+													rr:parent "parent::semanticId/parent::qualifier/ancestor::*/idShort" ;
+												  ] ;
+												] ;
+							] ;
+
+	# type*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Qualifier/type" ] ;
+								rr:objectMap 	[ rml:reference "type" ] ;
+							] ;
+	
+	# valueType*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Qualifier/valueType" ] ;
+								rr:objectMap 	[ rml:reference "valueType" ] ;
+							] ;
+	
+	# value
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Qualifier/value" ] ;
+								rr:objectMap 	[ rml:reference "value" ] ;
+							] ;
+
+	# valueId 
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Qualifier/valueId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+													rr:joinCondition [
+													rr:child "ancestor-or-self::*/idShort" ;
+													rr:parent "parent::valueId/parent::qualifier/ancestor::*/idShort" ;
+												  ] ;
+												] ;
+							] ;
+	.
+# 
+
+# 4.7.2.12 Formula Attributes
+
+_:Formula a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//formula[node()]"
+	] ;
+
+	rr:subjectMap _:fFormula ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:class aas:Formula ;
+						  ] ;
+	#
+
+	# dependsOn
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Formula/dependsOn" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Formula_dependsOn ;
+												  rr:joinCondition [
+													rr:child "ancestor-or-self::*/idShort" ;
+													rr:parent "parent::Formula/ancestor::*/idShort" ;
+												  ] ;
+												] ;
+							] ;
+	.
+# 
+
+_:Formula_dependsOn a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//formula/dependsOn[node()]"
+	] ;	
+	
+	rr:subjectMap _:fReference ;
+
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Reference/key" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:key ;
+													rr:joinCondition [
+                                                   		rr:child "keys//key" ;
+                                                   		rr:parent "." ;
+                                                  	] ;
+												] ;
+							] ;
+	.
+#
+
+# 4.7.2.13 HasDataSpecification (abstract) - mapped explicitly
+
+# 4.7.3 Asset Administration Shell Attributes
+
+_:AssetAdministrationShell a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//assetAdministrationShell[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRDI ;
+
+	rr:predicateObjectMap [
+							rr:predicate rdf:type ;
+							rr:object aas:AssetAdministrationShell ;
+						  ] ;
+	#
+	
+	# identifiable via identifiableMap (inh.)
+	
+	# hasDataSpecification (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap	[ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/dataSpecification" ] ;
+								rr:objectMap	[ rr:parentTriplesMap _:Reference ;
+								 			   	  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "parent::dataSpecification/ancestor::assetAdministrationShell/identification" ;
+                                            		] ;
+												] ;
+							] ;
+	#
+
+	# derivedFrom
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/derivedFrom" ] ;
+								rr:objectMap	[ rr:parentTriplesMap _:Reference ;
+								 			   	  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "parent::derivedFrom/ancestor::assetAdministrationShell/identification" ;
+                                            		] ;
+												]
+							] ;
+	#
+
+	# security
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/security" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Security ;
+								 				  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "ancestor::assetAdministrationShell/identification" ;
+                                            		] ;
+												]
+							] ;
+	#
+
+	# assetInformation*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap	[ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/assetInformation" ] ;
+								rr:objectMap	[ rr:parentTriplesMap _:AssetInformation ;
+								 				  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "ancestor::assetAdministrationShell/identification" ;
+                                            		] ;
+												]
+							] ;
+	#
+
+	# submodel
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/submodel" ] ;
+								rr:objectMap	[ rr:parentTriplesMap _:Reference ;
+								 				  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "parent::submodelRef/ancestor::assetAdministrationShell/identification" ;
+                                            		] ;
+												]
+							] ;
+	#
+
+	# view
+	rr:predicateObjectMap 	[	
+								rr:predicateMap	[ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/view" ] ;
+								rr:objectMap	[ rr:parentTriplesMap _:View ;
+								 				  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "ancestor::assetAdministrationShell/identification" ;
+                                            		] ;
+												]
+							] ;
+	.
+#
+
+# 4.7.4 Asset Attributes
+
+_:Asset a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//asset[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRDI ;
+
+	rr:predicateObjectMap [
+							rr:predicate rdf:type ;
+							rr:object aas:Asset ;
+						  ] ;
+	#
+
+	# identifiable via identifiableMap (inh.)
+
+	# hasDataSpecification (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicate "https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/dataSpecification" ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+								 			   			rr:joinCondition [
+                                                   	 	rr:child "identification" ;
+                                                   	 	rr:parent "parent::dataSpecification/ancestor::asset/identification" ;
+                                            			] ;
+												]
+							] ;
+	.
+#
+
+# 4.7.5 Asset Information Attributes 
+
+_:AssetInformation a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//assetInformation[node()]"
+	] ;
+
+	rr:subjectMap _:fAssetInformation ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:AssetInformation ;
+						  ] ;
+	#
+
+	# assetKind*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetInformation/assetKind" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:AssetKind ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::assetAdministrationShell/identification" ;
+                                                   	 rr:parent "ancestor::assetInformation/ancestor::assetAdministrationShell/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	
+	# globalAssetId
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetInformation/globalAssetId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+									 			   rr:joinCondition [
+                                                    	 rr:child "ancestor::assetAdministrationShell/identification" ;
+                                                    	 rr:parent "parent::globalAssetId/ancestor::assetInformation/parent::assetAdministrationShell/identification" ;
+                                                 	] ;
+												] ;
+							] ;
+
+	# specificAssetId
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetInformation/specificAssetId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:IdentifierKeyValuePair ;
+									 			   rr:joinCondition [
+                                                    	 rr:child "ancestor::assetAdministrationShell/identification" ;
+                                                    	 rr:parent "ancestor::assetInformation/parent::assetAdministrationShell/identification" ;
+                                                 	] ;
+												] ;
+							] ;
+	
+	# billOfMaterial
+	rr:predicateObjectMap 	[	
+							rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetInformation/billOfMaterial" ] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+							  				  rr:joinCondition [
+                                                   	 rr:child "ancestor::assetAdministrationShell/identification" ;
+                                                   	 rr:parent "parent::billOfMaterials/ancestor::assetInformation/ancestor::assetAdministrationShell/identification" ;
+                                                  ] ;
+											] ;
+							] ;
+
+	#defaultThumbNail (file_t)
+	rr:predicateObjectMap 	[	
+							rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetInformation/thumbnail" ] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:File ;
+											  rr:joinCondition [
+                                                   	 rr:child "ancestor::assetAdministrationShell/identification" ;
+                                                   	 rr:parent "ancestor::defaultThumbNail/ancestor::assetAdministrationShell/identification" ;
+                                              ] ;	
+											] ;
+						] ;
+	.
+#
+
+_:AssetKind a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//assetKind[node()]" ;
+	] ;
+
+	rr:subjectMap _:fUpperCaseAssetKind ;
+	
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:AssetKind ;
+						  ] ;
+	.
+#
+
+_:IdentifierKeyValuePair a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//specificAssetId[node()]" ;
+	] ;
+
+	rr:subjectMap _:fIdentifierKeyValuePair ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:IdentifierKeyValuePair ;
+						  ] ;
+
+	# hasSemantics 
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasSemantics/semanticId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::semanticId/parent::specificAssetId/ancestor::*/identification" ;
+                                                  ] ; 
+												] ;
+							] ;
+	#
+
+	# key*
+	rr:predicateObjectMap 	[	
+							rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/IdentifierKeyValuePair/key" ] ;
+							rr:objectMap 	[ rml:reference "key" ] ;
+							] ;
+
+	# value
+	rr:predicateObjectMap 	[	
+							rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/IdentifierKeyValuePair/value" ] ;
+							rr:objectMap 	[ rml:reference "value" ] ;
+							] ;
+
+	# externalSubjectId
+	rr:predicateObjectMap 	[	
+							rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/IdentifierKeyValuePair/externalSubjectId" ] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+											  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::externalSubjectId/parent::specificAssetId/ancestor::*/identification" ;
+                                              ] ; 
+											] ;
+						] ;
+	.
+#
+
+# 4.7.6 Submodel Attributes
+
+_:Submodel a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//submodel[node()]"
+						] ;
+	#
+	
+	rr:subjectMap _:fIRDI ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Submodel ;
+						  ] ;
+	#
+
+	# identifiable via identifiableMap (inh.)
+
+	# hasKind (inh.)
+	rr:predicateObjectMap [
+							rr:predicateMap [ rr:constant  "https://admin-shell.io/aas/3/0/RC01/HasKind/kind" ] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:ModelingKind ;
+												rr:joinCondition [
+																	rr:child "identification" ;
+																	rr:parent "parent::*/identification" ;
+																] ;
+											] ;
+						] ;
+	#
+
+	# hasSemantics (inh.) 
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasSemantics/semanticId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "parent::semanticId/parent::submodel/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# qualifiable qualifier/formula	(inh.)				
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Qualifiable/qualifier" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Qualifier ;
+												  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "parent::submodel/identification" ;
+                                                  ] ;
+												] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Formula ;
+												  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "parent::submodel/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# hasDataSpecification (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/dataSpecification" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "parent::dataSpecification/ancestor::submodel/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# SubmodelElement
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Submodel/submodelElement" ] ;
+								#rr:objectMap _:fTest ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:RelationshipElement ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AnnotatedRelationshipElement ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[ 
+													rr:parentTriplesMap _:Property ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[ 
+													rr:parentTriplesMap _:MultiLanguageProperty ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Range ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Blob ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:File ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:ReferenceElement ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Capability ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:SubmodelElementCollection ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Operation ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:BasicEvent;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Entity ;
+													rr:joinCondition _:join_submodel_identification ;
+													rr:joinCondition _:join_submodel_idShort ;
+												] ;
+							] ;
+	
+	.
+#
+
+_:join_submodel_identification a rr:joinCondition ;
+	rr:child "identification" ;
+	rr:parent "ancestor::submodel/identification" ;
+.
+
+_:join_submodel_idShort a rr:joinCondition ;
+	rr:child "idShort" ;
+    rr:parent "parent::submodelElement/parent::submodelElements/parent::submodel/idShort" ;
+.
+
+
+# 4.7.7 Submodel Element Attributes
+
+_:SubmodelElement a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//submodelElement/child::*[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	# Referable (inh.)
+	rr:predicateObjectMap _:HasExtensions_extension ;
+
+	rr:predicateObjectMap _:Referable_idShort ;
+
+	rr:predicateObjectMap _:Referable_category ;
+							
+	rr:predicateObjectMap _:Referable_description ;
+
+	rr:predicateObjectMap _:Referable_displayName ;
+												
+	rr:predicateObjectMap [
+							rr:predicateMap [ rr:constant  "https://admin-shell.io/aas/3/0/RC01/HasKind/kind" ] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:ModelingKind ;
+												rr:joinCondition [
+																	rr:child "ancestor-or-self::*/idShort" ;
+																	rr:parent "ancestor::*/idShort" ;
+																] ;
+												# rr:joinCondition [
+												# 					rr:child "ancestor::*/identification" ;
+												# 					rr:parent "ancestor::*/identification" ;
+												# 				] ;
+											] ;
+						] ;
+	#
+
+	# hasSemantics (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasSemantics/semanticId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "idShort" ;
+                                                   	 rr:parent "parent::semanticId/parent::*/parent::submodelElement/child::*/idShort" ;
+                                                  ] ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# qualifiable qualifier/formula	(inh.)				
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Qualifiable/qualifier" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Qualifier ;
+												  rr:joinCondition [
+                                                   	 rr:child "idShort" ;
+                                                   	 rr:parent "parent::Qualifiers/parent::*/parent::submodelElement/child::*/idShort" ;
+                                                  ] ;
+												] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Formula ;
+												  rr:joinCondition [
+                                                   	 rr:child "idShort" ;
+                                                   	 rr:parent "parent::Qualifiers/parent::*/parent::submodelElement/child::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# hasDataSpecification (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/dataSpecification" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+								 				  rr:joinCondition [
+                                                   	 rr:child "idShort" ;
+                                                   	 rr:parent "parent::dataSpecification/parent::*/parent::submodelElement/child::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+	.
+#
+
+# 4.7.8.1 Annotated Relationship Element Attributes
+
+_:AnnotatedRelationshipElement a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//annotatedRelationshipElement[node()]"
+						] ;
+	#
+
+	rr:subjectMap _:fAnnotatedRelationshipElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:AnnotatedRelationshipElement ;
+						  ] ;		  
+	#
+
+	# (inh.) from _:SubmodelElement
+
+	# relationshipElement/first
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/RelationshipElement/first" ] ; #range:Referable -> ReferableElements see p.84
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AccessPermissionRule ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AnnotatedRelationshipElement ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Asset ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AssetAdministrationShell ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:BasicEvent ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Blob ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Capability ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:ConceptDescription ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Entity ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:File ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:MultiLanguageProperty ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Operation ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Property ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Range ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:ReferenceElement ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:RelationshipElement ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Submodel ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:SubmodelElementCollection ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:View ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_first ;
+												] ;
+							] ;
+	#
+
+	# relationshipElement/second
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/RelationshipElement/second" ] ; #range:Referable -> ReferableElements see p.84
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AccessPermissionRule ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AnnotatedRelationshipElement ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Asset ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AssetAdministrationShell ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:BasicEvent;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Blob ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Capability ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:ConceptDescription ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Entity ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:File ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:MultiLanguageProperty ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Operation ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Property ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Range ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:ReferenceElement ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:RelationshipElement ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Submodel ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:SubmodelElementCollection ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:View ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement_second ;
+												] ;
+							] ;
+	#
+
+	# annotation
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AnnotatedRelationshipElement/annotation" ] ; # range:dataElement;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Blob ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:MultiLanguageProperty ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Property ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Range ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:ReferenceElement ;
+													rr:joinCondition _:join_AnnotatedRelationshipElement ;
+												] ;
+							] ;
+	#
+	.
+#
+
+_:join_AnnotatedRelationshipElement a rr:joinCondition ;
+	rr:child "idShort" ;
+	rr:parent "ancestor::AnnotatedRelationshipElement/idShort" ;
+.
+
+_:join_AnnotatedRelationshipElement_first a rr:joinCondition ;
+	rr:child "idShort" ;
+	rr:parent "parent::first/ancestor::AnnotatedRelationshipElement/idShort" ;
+.
+
+_:join_AnnotatedRelationshipElement_second a rr:joinCondition ;
+	rr:child "idShort" ;
+	rr:parent "parent::second/ancestor::AnnotatedRelationshipElement/idShort" ;
+.
+
+# 4.7.8.2 Basic Event Attributes
+
+_:BasicEvent a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//basicEvent[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:BasicEvent;
+						  ] ;
+	#
+
+	# observed(reference_t)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/BasicEvent/observed" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "idShort" ;
+                                                   	 rr:parent "parent::observed/ancestor::basicEvent/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+	.
+#
+
+# 4.7.8.3 Capability Attributes
+
+_:Capability a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//capability[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Capability ;
+						  ] ;
+	#
+
+	# (inh.) from _:SubmodelElement
+	.
+#
+
+# 4.7.8.4 Blob Attributes
+
+_:Blob a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//blob[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [
+							rr:predicate rdf:type ;
+							rr:object aas:Blob ;
+						  ] ;
+	#
+	
+	# inherits from DataElement via submodelElementAbstract_t via _:SubmodelElement
+
+	# value
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Blob/value" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:BlobType ;
+												  rr:joinCondition [
+                                                   	 rr:child "idShort" ;
+                                                   	 rr:parent "ancestor::blob/idShort" ;
+                                                  ] ;
+												] ;	
+							] ;
+	#
+
+	# mimeType*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Blob/mimeType" ] ;
+								rr:objectMap 	[	
+													rml:reference "mimeType" ;
+													rr:datatype xsd:string ;
+												]													
+							] ;
+	#
+	.
+#
+
+_:BlobType a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//blob/value[node()]" ;
+	] ;
+
+	rr:subjectMap _:fBlobType ;
+	
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:BlobType ;
+						  ] ;
+	.
+#
+
+# 4.7.8.5 Data Element and Overview of Data Element Types
+
+# 4.7.8.6 Entity Attributes
+
+_:Entity a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//entity[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Entity ;
+						  ] ;
+	#
+
+	# submodelElementAbstract via _:SubmodelElement
+
+	# statement
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Entity/statement" ] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Capability ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								# DataElement
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Blob ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								rr:objectMap 	[ 
+													rr:parentTriplesMap _:MultiLanguageProperty ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								rr:objectMap 	[ 
+													rr:parentTriplesMap _:Property ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Range ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:ReferenceElement ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								#
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Entity ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:BasicEvent;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:File ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Operation ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:RelationshipElement ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AnnotatedRelationshipElement ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:SubmodelElementCollection ;
+													rr:joinCondition _:join_Entity_statement ;
+												] ;
+							] ;
+	#
+
+	# entityType*
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Entity/entityType" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:EntityType ;
+								 				  rr:joinCondition [
+                                                  	rr:child "ancestor-or-self::*/idShort" ;
+                                                    rr:parent "ancestor::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# globalAssetId
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Entity/globalAssetId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+								 				  rr:joinCondition [
+                                                  	rr:child "ancestor-or-self::*/idShort" ;
+                                                    rr:parent "parent::globalAssetId/ancestor::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# specificAssetId
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Entity/specificAssetId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:IdentifierKeyValuePair ;
+								 				  rr:joinCondition [
+                                                  	rr:child "ancestor-or-self::*/idShort" ;
+                                                    rr:parent "ancestor::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+	.
+#
+
+_:join_Entity_statement a rr:joinCondition ;
+	rr:child "idShort" ;
+    rr:parent "ancestor::statements/ancestor::entity/idShort" ;
+.
+
+_:EntityType a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//entityType[node()]"
+	] ;
+
+	rr:subjectMap [ rr:template "https://admin-shell.io/aas/3/0/RC01/EntityType/{.}" ];
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:EntityType ;
+						  ] ;
+	
+	.
+#
+
+# 4.7.8.7 Event Attributes (abstract)
+
+# 4.7.8.8 File Attributes
+
+_:File a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//file[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:File ;
+						  ] ;
+	#
+	
+	# (inh.) from _:SubmodelElement
+
+	# value
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/File/value" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:pathType ;
+								 				  rr:joinCondition [
+                                                   	 rr:child "ancestor-or-self::*/idShort" ;
+                                                   	 rr:parent "ancestor::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# mimeType*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/File/mimeType" ] ;
+								rr:objectMap 	[	
+													rml:reference "mimeType" ;
+													rr:datatype xsd:string 
+												]													
+							] ;
+	#
+	.
+#
+
+# 4.7.8.9 Multi Language Property Attributes
+
+_:MultiLanguageProperty a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//multiLanguageProperty[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:MultiLanguageProperty ;
+						  ] ;
+	#
+	
+	# (inh.) from _:SubmodelElement
+
+	# value
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/MultiLanguageProperty/value" ] ;
+								rr:objectMap 	[	
+													rml:reference "value/langString" ;
+													rml:languageMap [ rml:reference "value/langString/@lang" ] ;
+												]	
+							] ;
+	#
+
+	# valueId
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/MultiLanguageProperty/valueId" ] ;
+	 							rr:objectMap 	[ rr:parentTriplesMap _:Reference ; 
+												  rr:joinCondition [
+                                                    rr:child "ancestor-or-self::*/idShort" ;
+                                                    rr:parent "parent::valueId/ancestor::*/idShort" ;
+                                                  ] ;
+												] ;
+	 						] ;
+	#
+	.
+#
+
+# 4.7.8.10 Operation Attributes
+
+_:Operation a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//operation[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Operation ;
+						  ] ;
+	#
+
+	# (inh.) from _:SubmodelElement
+
+	# inputVariable
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Operation/inputVariable" ] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:OperationVariable ;
+													rr:joinCondition[
+														rr:child "ancestor-or-self::*/idShort" ;
+														rr:parent "parent::inputVariable/ancestor::*/idShort" ;
+													] ;
+												] ;
+							] ;
+	#
+
+	# outputVariable
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Operation/outputVariable" ] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:OperationVariable ;
+													rr:joinCondition[
+														rr:child "ancestor-or-self::*/idShort" ;
+														rr:parent "parent::outputVariable/ancestor::*/idShort" ;
+													] ;
+												] ;
+							] ;
+	#
+
+	# inoutputVariable
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Operation/inoutputVariable" ] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:OperationVariable ;
+													rr:joinCondition[
+														rr:child "ancestor-or-self::*/idShort" ;
+														rr:parent "parent::inoutputVariable/ancestor::*/idShort" ;
+													] ;
+												] ;	
+							] ;
+	#
+	.
+#
+
+_:OperationVariable a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//operation/child::*/value/child::*[node()]/.." ; 
+	] ;
+
+	rr:subjectMap _:foperationVariable;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:OperationVariable ;
+						  ] ;
+	
+	# value*
+	rr:predicateObjectMap [	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/OperationVariable/value" ] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:File ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:Property ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:MultiLanguageProperty ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:Range ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:Blob ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:ReferenceElement ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:AnnotatedRelationshipElement ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:BasicEvent;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:Capability ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:Entity ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:Operation ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:RelationshipElement ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;
+							rr:objectMap 	[ rr:parentTriplesMap _:SubmodelElementCollection ;
+											  rr:joinCondition _:join_OperationVariable_value ;
+											] ;			
+						] ;
+	.
+#
+
+_:join_OperationVariable_value a rr:joinCondition ;
+	rr:child "child::*/child::*/idShort" ;
+    rr:parent "./idShort" ;
+.
+
+# 4.7.8.11 Property Attributes
+
+_:Property a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//property[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Property ;
+						  ] ;
+	#
+	
+	# inherited from DataElement via submodelElementAbstract_t via _:SubmodelElement
+
+	# valueType*
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Property/valueType" ] ;
+								rr:objectMap 	[	
+													rml:reference "valueType" ;
+												] ;	
+							] ;
+
+	# value
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Property/value" ] ;
+								rr:objectMap 	[	
+													rml:reference "value" ;
+												] ;
+							] ;
+	#
+
+	# valueId
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Property/valueId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+								 				  rr:joinCondition [
+                                                   	 rr:child "ancestor-or-self::*/idShort" ;
+                                                   	 rr:parent "parent::valueId/ancestor::*/idShort" ;
+                                                  ] ; 
+												] ;												
+							]  ;
+	.
+#
+
+# 4.7.8.12 Range Attributes
+
+_:Range a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//range[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Range ;
+						  ] ;
+	#
+
+	# inherits from DataElement via submodelElementAbstract_t via _:SubmodelElement
+
+	# valueType
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Range/valueType" ] ;
+								rr:objectMap 	[	
+													rml:reference "valueType" ;
+													rr:datatype xsd:string ; 
+												]	
+							] ;
+	#
+
+	# min
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Range/min" ] ;
+								rr:objectMap 	[	
+													rml:reference "min" ;
+												] ;
+							] ;
+	#
+
+	# max
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Range/max" ] ;
+								rr:objectMap 	[	
+													rml:reference "max" ;
+												] ;												
+							] ;
+	#
+	.
+#
+
+# 4.7.8.13 Reference Element Attributes
+
+_:ReferenceElement a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//referenceElement[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fReferenceElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:ReferenceElement ;
+						  ] ;
+	#
+
+	# inherits from DataElement via submodelElementAbstract_t via _:SubmodelElement
+
+	# value
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/ReferenceElement/value" ] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Reference ;
+													rr:joinCondition [
+                                                      rr:child "ancestor-or-self::*/idShort" ;
+                                                      rr:parent "parent::value/ancestor::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	.
+#
+
+# 4.7.8.14 Relationship Element Attributes
+
+_:RelationshipElement a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//relationshipElement[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:RelationshipElement ;
+						  ] ;
+	#
+	# inherits from DataElement via submodelElementAbstract via _:SubmodelElement
+
+	# first*
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/RelationshipElement/first" ] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Reference ;
+													rr:joinCondition [
+                                                      rr:child "ancestor-or-self::*/idShort" ;
+                                                      rr:parent "parent::first/parent::relationshipElement/ancestor-or-self::*/idShort" ;
+                                                  	] ;
+												] ;
+							] ;
+	#
+
+	# second*
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/RelationshipElement/second" ] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Reference ;
+													rr:joinCondition [
+                                                      rr:child "ancestor-or-self::*/idShort" ;
+                                                      rr:parent "parent::second/parent::relationshipElement/ancestor-or-self::*/idShort" ;
+                                                  	] ;
+												] ;
+							] ;
+.
+#
+
+# 4.7.8.15 Submodel Element Collection Attributes
+
+_:SubmodelElementCollection a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//submodelElementCollection[node()]" ;
+						] ;
+	#
+
+	rr:subjectMap _:fIRISubmodelElement ;	
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:SubmodelElementCollection ;
+						  ] ;
+	#
+
+	# inherits from DataElement via submodelElementAbstract via _:SubmodelElement
+
+	# value
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/SubmodelElementCollection/value" ] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:RelationshipElement ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AnnotatedRelationshipElement ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Property ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:MultiLanguageProperty ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Range ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Blob ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:File ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:ReferenceElement ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Capability ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:SubmodelElementCollection ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Operation ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:BasicEvent;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Entity ;
+													rr:joinCondition _:join_SubmodelElementCollection_value ;
+													rr:joinCondition _:join_ancestor_identification ;
+												] ;
+							] ;
+	#
+
+	# ordered
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/SubmodelElementCollection/ordered" ] ;
+								rr:objectMap 	[	
+													rml:reference "ordered" ;
+													rr:datatype xsd:boolean 
+												] ;
+							] ;
+	#
+
+	# allowDuplicates
+	rr:predicateObjectMap 	[
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/SubmodelElementCollection/allowDuplicates" ] ;
+								rr:objectMap 	[	
+													rml:reference "allowDuplicates" ;
+													rr:datatype xsd:boolean ;
+												] ;
+							] ;
+	.
+#
+
+_:join_ancestor_identification a rr:joinCondition ;
+	rr:child "ancestor-or-self::*/identification" ;
+    rr:parent "ancestor::*/identification" ;
+.
+
+_:join_SubmodelElementCollection_value a rr:joinCondition ;
+	rr:child "idShort" ;
+    rr:parent "parent::submodelElement/parent::value/parent::submodelElementCollection/idShort" ;
+.
+
+# 4.7.9 Concept Description Attributes
+
+_:ConceptDescription a rr:TriplesMap ;
+
+	rml:logicalSource	[
+							rml:source "unique_input_filename_placeholder" ;
+							rml:referenceFormulation ql:XPath ;
+							rml:iterator "aasenv//conceptDescription[node()]" ;
+						] ;
+	#
+	
+	rr:subjectMap _:fIRDI ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:ConceptDescription ;
+						  ] ;
+	#
+
+	# inherits from Identifiable via identifiableMap (inh.)
+
+	# hasDataSpecification (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/ConceptDescription/embeddedDataSpecification" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "parent::dataSpecification/ancestor::conceptDescription/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# isCaseOf
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/ConceptDescription/isCaseOf" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "parent::isCaseOf/ancestor::conceptDescription/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# content
+		rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/ConceptDescription/content" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:DataSpecificationIEC61360 ;
+												  rr:joinCondition [
+                                                   	 rr:child "identification" ;
+                                                   	 rr:parent "parent::dataSpecificationContent/parent::embeddedDataSpecification/parent::conceptDescription/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	.
+#
+
+# 4.7.10 View Attributes
+
+_:View a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//view[node()]"
+	] ;
+
+	rr:subjectMap _:fView ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:View ;
+						  ] ;
+
+	# referable (inh.)
+
+	# HasExtensions (inh.)
+	rr:predicateObjectMap _:HasExtensions_extension ;
+
+	rr:predicateObjectMap _:Referable_idShort ;
+
+	rr:predicateObjectMap _:Referable_displayName ;
+
+	rr:predicateObjectMap _:Referable_category ;
+							
+	rr:predicateObjectMap _:Referable_description ;
+
+	# hasSemantics (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasSemantics/semanticId" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+													rr:joinCondition [
+                                                   		rr:child "idShort" ;
+                                                   	 	rr:parent "parent::semanticId/ancestor::view/idShort" ;
+                                                  	] ;
+												] ;
+							] ;
+	#
+	
+	# hasDataSpecification (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/dataSpecification" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "idShort" ;
+                                                   	 rr:parent "parent::dataSpecification/ancestor::view/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	#
+
+	# containedElement
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/View/containedElement" ] ;
+								# referable/identifiable
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Asset ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AssetAdministrationShell ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Submodel ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:ConceptDescription ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								# referable/SubmodelElement
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:RelationshipElement ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AnnotatedRelationshipElement ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Property ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:MultiLanguageProperty ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Range ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Blob ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:File ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:ReferenceElement ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Capability ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:SubmodelElementCollection ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Operation ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:BasicEvent;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Entity ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:Operation ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:AnnotatedRelationshipElement ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:SubmodelElementCollection ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+								#
+								rr:objectMap 	[	
+													rr:parentTriplesMap _:View ;
+													rr:joinCondition _:join_view_containedElementRef ;
+												] ;
+							] ;
+	.
+#
+
+_:join_view_containedElementRef a rr:joinCondition ;
+	rr:child "idShort" ;
+    rr:parent "ancestor::containedElementRef/parent::view/idShort" ;
+.
+
+# 4.7.11 Referencing in Asset Administration Shells
+
+_:Reference a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//keys/key[node()]/.." #Alternative:"aasenv//keys[./child::key]"
+	] ;
+
+	rr:subjectMap _:fReference ; 
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Reference ;
+						  ] ;
+
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Reference/key" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:key ;
+												  rr:joinCondition [
+                                                   	 rr:child "." ;
+                                                   	 rr:parent ".." ;
+                                                  ] ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*[./idShort][1]/idShort" ;
+                                                   	 rr:parent "ancestor::*[./idShort][1]/idShort" ;
+                                                  ] ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	.
+#
+
+_:key a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//key[node()]" ;
+	] ;
+
+	rr:subjectMap _:fKey ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Key ;
+						  ] ;
+	
+	rr:predicateObjectMap [rml:reference "ancestor::*/idShort"] ;
+
+	rr:predicateObjectMap _:key_typeMap ;
+	rr:predicateObjectMap _:key_valueMap ;
+	rr:predicateObjectMap _:key_localMap ;
+	rr:predicateObjectMap _:key_idTypeMap ;
+	rr:predicateObjectMap _:key_indexMap ;
+	.
+#
+
+_:key_type a rr:TriplesMap ;
+	# distinction between KeyElements, ReferableElements, IdentifiableElements not yet implemented
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//key/@type" ;
+	] ;
+	
+	rr:subjectMap _:fUpperCaseKeyType ;
+	
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:KeyElements ;
+						  ] ;
+	.
+#
+
+_:key_idType a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//key/@idType" ;
+	] ;
+
+	rr:subjectMap [rr:template "https://admin-shell.io/aas/3/0/RC01/KeyType/{.}"] ;
+	
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:KeyType ;
+						  ] ;
+	.
+#
+
+_:key_indexMap a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Key/index" ] ;
+	rr:objectMap _:fIndex ;
+	.
+#
+
+_:key_localMap a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Key/local" ] ;
+	rr:objectMap 	[	
+						rml:reference "@local" ;
+						rr:datatype xsd:boolean ;
+					] ;
+	.
+#
+
+_:key_typeMap a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Key/type" ] ;
+	rr:objectMap 	[ rr:parentTriplesMap _:key_type ;
+						rr:joinCondition [
+                        rr:child "." ;
+                        rr:parent "parent::key" ;
+                        ] ;
+					] ;
+	.
+#
+
+_:key_valueMap a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Key/value" ] ;
+	rr:objectMap 	[	
+						rml:reference "." ;
+					]
+	.
+#
+
+_:key_idTypeMap a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Key/idType" ] ;
+	rr:objectMap 	[ rr:parentTriplesMap _:key_idType ;
+						rr:joinCondition [
+                        rr:child "." ;
+                        rr:parent "." ;
+                        ] ;
+					] ;
+	.
+#
+
+# 4.7.13.2 Data Types
+
+_:langString a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		#rml:iterator "aasenv//langString" ;
+		rml:iterator "(aasenv//preferredName/langString[@lang]|aasenv//shortName/langString[@lang]|aasenv//definition/langString[@lang])" ; #aasenv//displayName/langString[@lang]|aasenv//description/langString[@lang]|
+	] ;
+
+	rr:subjectMap   [ rr:termType rr:BlankNode ] ;
+
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/langString" ] ;
+								rr:objectMap 	[ rml:reference "." ;
+								 				  rml:languageMap [ rml:reference "./@lang" ] ;
+												] ;
+							] ;
+	.
+#
+
+# 4.8 Data Specification Templates
+
+# Note: The Data Specification Templates do not belong to the metamodel of the Asset Administration Shell.
+# In serializations that choose specific templates the corresponding data specification content may be directly incorporated.
+
+# 4.8.2 Predefined Templates for Property and Value Descriptions
+
+_:DataSpecificationIEC61360 a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//dataSpecificationIEC61360[node()]" ;
+	] ;
+
+	rr:subjectMap _:fdataSpecificationIEC61360 ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object IEC61360:DataSpecificationIEC61360 ;
+						  ] ;
+	#
+
+	# identifiable via identifiableMap
+
+	#preferredName
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/preferredName" ;
+	 							# rr:objectMap 	[ rml:reference "preferredName/langString" ;
+					  			# 				  rml:languageMap [ rml:reference "preferredName/child::*/@lang" ] ;
+								# 				] ;
+								rr:objectMap [ rr:parentTriplesMap _:langString ; 
+											   rr:joinCondition [
+                                                    rr:child "." ;
+                                                    rr:parent "parent::preferredName/.." ;
+                                                  ] ;
+											 ] ;
+	 						] ;
+	
+	#shortName
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/shortName" ;
+	 							# rr:objectMap 	[ rml:reference "shortName/langString" ;
+					  			# 				  rml:languageMap [ rml:reference "shortName/langString/@lang" ] ;
+								# 				] ;
+								rr:objectMap [ rr:parentTriplesMap _:langString ; 
+											   rr:joinCondition [
+                                                    rr:child "." ;
+                                                    rr:parent "parent::shortName/.." ;
+                                                  ] ;
+											 ] ;
+	 						] ;	
+	#unit
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/unit" ;
+	 							rr:objectMap 	[ rml:reference "unit" ] ;
+	 						] ;
+	#unitId
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/unitId" ;
+	 							rr:objectMap 	[ rr:parentTriplesMap _:UnitId ; 
+												  rr:joinCondition [
+                                                	rr:child "." ;
+                                                    rr:parent ".." ; # join sufficient?
+                                                  ] ;
+												] ;
+	 						] ;
+	#sourceOfDefinition
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/sourceOfDefinition" ;
+	 							rr:objectMap 	[ rml:reference "sourceOfDefinition" ] ;
+	 						] ;
+	#symbol
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/symbol" ;
+	 							rr:objectMap 	[ rml:reference "symbol" ] ;
+	 						] ;	
+	#dataType
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/dataType" ;
+	 							rr:objectMap 	[ rr:parentTriplesMap _:DataType ; 
+												  rr:joinCondition [
+                                                    rr:child "." ;
+                                                    rr:parent ".." ; # join sufficient?
+                                                  ] ;
+												] ;
+	 						] ;
+	#definition
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/definition" ;
+	 							# rr:objectMap 	[ rml:reference "definition/langString" ;
+					  			# 				  rml:languageMap [ rml:reference "definition/langString/@lang" ] ;
+								# 				] ;
+								rr:objectMap [ rr:parentTriplesMap _:langString ; 
+											   rr:joinCondition [
+                                                    rr:child "." ;
+                                                    rr:parent "parent::definition/.." ;
+                                                  ] ;
+											 ] ;
+	 						] ;
+	#valueFormat
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/valueFormat" ;
+	 							rr:objectMap 	[ rml:reference "valueFormat" ] ;
+	 						] ;
+	#valueList
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/valueList" ;
+	 							rr:objectMap 	[ rml:reference "valueList" ] ;
+	 						] ;
+	#value
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/value" ;
+	 							rr:objectMap 	[ rml:reference "value" ] ;
+	 						] ;
+	#valueId
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/valueId" ;
+	 							rr:objectMap 	[ rr:parentTriplesMap _:Reference ; 
+												  rr:joinCondition [
+                                                    rr:child "." ;
+                                                    rr:parent "parent::valueId/parent::*" ; # join sufficient?
+                                                  ] ;
+												] ;
+	 						] ;
+	#levelType
+	rr:predicateObjectMap 	[	
+	 							rr:predicate "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360/levelType" ;
+	 							rr:objectMap 	[ rr:parentTriplesMap _:LevelType ; 
+												  rr:joinCondition [
+                                                    rr:child "." ;
+                                                    rr:parent ".." ; # join sufficient?
+                                                  ] ;
+												] ;
+	 						] ;
+	.
+#
+
+_:DataType a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//*[name()='IEC61360:dataType'][node()]"
+	] ;
+
+	rr:subjectMap [ rr:template "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/{.}" ];
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object IEC61360:DataTypeIEC61360 ;
+						  ] ;
+	.
+#
+
+_:LevelType a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//levelType[node()]"
+	] ;
+
+	rr:subjectMap [ rr:template "https://admin-shell.io/aas/3/0/RC01/LevelType/{.}" ]; # expects levelType xml string to be all caps, otherwise use function map
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:LevelType ;
+						  ] ;
+	.
+#
+
+_:KeyIEC31360 a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//*[name()='IEC61360:key'][node()]" ;
+	] ;
+
+	rr:subjectMap _:fKey ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object IEC61360:Key ;
+						  ] ;
+
+	rr:predicateObjectMap _:key_localMap ;
+	rr:predicateObjectMap _:key_typeMap ;
+	rr:predicateObjectMap _:key_valueMap ;
+	rr:predicateObjectMap _:key_idTypeMap ;
+	rr:predicateObjectMap _:key_indexMap ;
+	.
+#
+
+_:UnitId a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//unitId/keys/key[node()]/.."
+	] ;
+
+	rr:subjectMap _:fReference ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Reference ;
+						  ] ;
+	
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Reference/key" ] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:KeyIEC31360 ;
+												  rr:joinCondition [
+                                                   	 rr:child "." ;
+                                                   	 rr:parent ".." ;
+                                                  ] ;
+												] ;
+							] ;
+	.
+#
+
+# TO DO: Classes ValueList, ValueReferencePair
+
+# 5.3 Security - Metamodel Specification Details: Designators
+
+_:Security a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//security[node()]"
+	] ;
+
+	rr:subjectMap _:fSecurity ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Security ;
+						  ] ;
+
+	# accessControlPolicyPoints*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Security/accessControlPolicyPoints" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:PolicyAdministrationPoint ;
+												  rr:joinCondition [
+                                                   	 rr:child "." ;
+                                                   	 rr:parent ".." ;
+                                                  ] ;
+												] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:PolicyDecisionPoint ;
+												  rr:joinCondition [
+                                                   	 rr:child "." ;
+                                                   	 rr:parent ".." ;
+                                                  ] ;
+												] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:policyEnforcementPoint ;
+												  rr:joinCondition [
+                                                   	 rr:child "." ;
+                                                   	 rr:parent ".." ;
+                                                  ] ;
+												] ;
+								rr:objectMap 	[ rr:parentTriplesMap _:PolicyInformationPoints ;
+												  rr:joinCondition [
+                                                   	 rr:child "." ;
+                                                   	 rr:parent ".." ;
+                                                  ] ;
+												] ;
+							] ;
+									
+	# certificate
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Security/certificate" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:_BlobCertificate ;
+												  rr:joinCondition [
+                                                   	 rr:child "." ;
+                                                   	 rr:parent ".." ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# requiredCertificateExtension
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Security/requiredCertificateExtension" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ; 
+												  rr:joinCondition [
+                                                    	rr:child "ancestor::*/identification" ;
+                                                    	rr:parent "parent::requiredCertificateExtension/parent::security/ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	
+	.
+#
+
+_:_BlobCertificate a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//blobCertificate[node()]"
+	] ;
+
+	rr:subjectMap _:fBlobCertificate ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:BlobCertificate ;
+						  ] ;
+
+	# policyAdministrationPoint (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Certificate/policyAdministrationPoint" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:PolicyAdministrationPoint ;
+                                                  rr:joinCondition [
+                                                   	 rr:child "." ;
+                                                   	 rr:parent ".." ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# blobCertificate*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/BlobCertificate/blobCertificate" ] ;
+								rr:objectMap 	[ rml:reference "blobCertificate" ] ;
+							] ;
+	
+	# containedExtension
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/BlobCertificate/containedExtension" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::containedExtension/ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# lastCertificate*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/BlobCertificate/lastCertificate" ] ;
+								rr:objectMap 	[ rml:reference "lastCertificate" ;
+												  rr:dataType xsd:boolean ;
+												] ;
+							] ;
+	.
+#
+
+_:PolicyAdministrationPoint a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//policyAdministrationPoint[node()]"
+	] ;
+
+	rr:subjectMap _:fPolicyAdministrationPoint ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:PolicyAdministrationPoint ;
+						  ] ;
+
+	# localAccessControl
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PolicyAdministrationPoint/localAccessControl" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:AccessControl ;
+												  rr:joinCondition [
+                                                   	 rr:child "." ;
+                                                   	 rr:parent ".." ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# externalAccessControl*
+	rr:predicateObjectMap	[ 	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PolicyAdministrationPoint/externalAccessControl" ] ;
+								rr:objectMap [ rml:reference "externalAccessControl" ] ;
+							] ;
+	.
+#
+
+_:PolicyInformationPoints a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//policyInformationPoints[node()]"
+	] ;
+
+	rr:subjectMap _:fPolicyEnforcementPoints ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:PolicyInformationPoints ;
+						  ] ;
+	
+	#internalInformationPoint
+	rr:predicateObjectMap	[ 	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PolicyInformationPoints/internalInformationPoint" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Submodel ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::internalInformationPoint/parent::internalInformationPoints/ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# externalInformationPoints*
+	rr:predicateObjectMap	[ 	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PolicyInformationPoints/externalInformationPoints" ] ;
+								rr:objectMap 	[ rml:reference "externalInformationPoints" ;
+												  rr:dataType xsd:boolean ;
+												] ;
+							] ;
+	.
+#
+
+_:PolicyEnforcementPoints a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//policyEnforcementPoint[node()]"
+	] ;
+
+	rr:subjectMap _:fPolicyEnforcementPoints ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:PolicyEnforcementPoint ;
+						  ] ;
+
+	# externalAccessControl
+	rr:predicateObjectMap	[ 	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PolicyEnforcementPoints/externalPolicyEnforcementPoint" ] ;
+								rr:objectMap [ rml:reference "externalPolicyEnforcementPoint" ;
+											   rr:dataType xsd:boolean ;
+											] ;
+							] ;
+
+	.
+#
+
+_:PolicyDecisionPoint a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//policyDecisionPoint[node()]"
+	] ;
+
+	rr:subjectMap _:fPolicyDecisionPoint ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:PolicyDecisionPoint ;
+						  ] ;
+
+	# externalPolicyDecisionPoints
+	rr:predicateObjectMap	[ 	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PolicyDecisionPoint/externalPolicyDecisionPoints" ] ;
+								rr:objectMap [ rml:reference "externalPolicyDecisionPoints" ;
+											   rr:dataType xsd:boolean ;
+											 ] ;
+							] ;
+
+	.
+#
+
+_:AccessControl a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//accessControl[node()]"
+	] ;
+
+	rr:subjectMap _:fAccessControl ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:AccessControl ;
+						  ] ;
+	
+	# accessPermissionRules
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AccessControl/accessPermissionRule" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:AccessPermissionRule ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::accessPermissionRules/parent::accessControl/ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# selectableSubjectAttributes
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AccessControl/selectableSubjectAttributes" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::selectableSubjectAttributes/parent::accessControl/ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# defaultSubjectAttributes*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AccessControl/defaultSubjectAttributes" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::defaultSubjectAttributes/parent::accessControl/ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	
+	# selectablePermissions*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AccessControl/selectablePermissions" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::selectablePermissions/parent::accessControl/ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	
+	# defaultPermissions*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AccessControl/defaultPermissions" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::defaultPermissions/parent::accessControl/ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	
+	# selectableEnvironmentAttributes
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AccessControl/selectableEnvironmentAttributes" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::selectableEnvironmentAttributes/parent::accessControl/ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# defaultEnvironmentAttributes
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AccessControl/defaultEnvironmentAttributes" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Submodel ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/identification" ;
+                                                   	 rr:parent "parent::defaultEnvironmentAttributes/parent::accessControl/ancestor::*/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+	.
+#
+
+_:AccessPermissionRule a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//accessPermissionRule[node()]"
+	] ;
+
+	rr:subjectMap _:fAccessPermissionRule ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:AccessPermissionRule ;
+						  ] ;
+
+	# referable (inh.)
+
+	# HasExtensions (inh.)
+	rr:predicateObjectMap _:HasExtensions_extension ;
+
+	rr:predicateObjectMap _:Referable_description ;
+	rr:predicateObjectMap _:Referable_category ;
+	rr:predicateObjectMap _:Referable_displayName ;
+	rr:predicateObjectMap _:Referable_idShort ;
+
+	# qualifiable/qualifier	(inh.)					
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Qualifiable/qualifier" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Qualifier ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor-or-self/idShort" ;
+                                                   	 rr:parent "parent::accessPermissionRule/ancestor::*/idShort" ;
+                                                  ] ;
+								] ;
+							] ;
+	#
+
+	# qualifiable/formula (inh.)
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Formula" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Formula ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor-or-self::*/idShort" ;
+                                                   	 rr:parent "parent::accessPermissionRule/ancestor::*/idShort" ;
+												  ] ;
+												] ;
+							] ;
+	#
+
+	# targetSubjectAttributes*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AccessPermissionRule/targetSubjectAttributes" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:SubjectAttributes ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor-or-self::*/idShort" ;
+                                                   	 rr:parent "parent::targetSubjectAttributes/parent::accessPermissionRule/ancestor::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# permissionsPerObject
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AccessPermissionRule/permissionsPerObject" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:PermissionsPerObject ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor-or-self::*/idShort" ;
+                                                   	 rr:parent "parent::permissionsPerObject/parent::accessPermissionRule/ancestor::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	.
+#
+
+_:PermissionsPerObject a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//permissionsPerObject[node()]"
+	] ;
+
+	rr:subjectMap _:fPermission ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:PermissionsPerObject ;
+						  ] ;
+
+	# object*			
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PermissionsPerObject/object" ] ;
+								rr:objectMap 	[ rml:reference "object" ] ;
+							] ;
+
+	# targetObjectAttributes
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PermissionsPerObject/targetObjectAttributes" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:ObjectAttributes ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/idShort" ;
+                                                   	 rr:parent "parent::targetObjectAttributes/parent::permissionsPerObject/ancestor::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# permission
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PermissionsPerObject/permission" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Permission ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::*/idShort" ;
+                                                   	 rr:parent "parent::permission/parent::permissionsPerObject/ancestor::*/idShort" ;
+                                                  ] ;
+												] ;
+							] ;
+	.
+#
+
+_:ObjectAttributes a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//objectAttribute[node()]"
+	] ;
+
+	rr:subjectMap _:fobjectAttribute;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:ObjectAttributes ;
+						  ] ;
+	
+	# objectAttribute*
+	rr:predicateObjectMap [	rr:predicate "https://admin-shell.io/aas/3/0/RC01/ObjectAttributes/objectAttribute" ;
+							# joinConditions preliminary and untested
+							rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+											  rr:joinCondition [
+                                                   	rr:child "." ;
+                                                   	rr:parent ".." ;
+                                              ] ;
+										    ] ;
+							] ;
+	.
+#
+
+_:Permission a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//permission[node()]"
+	] ;
+
+	rr:subjectMap _:fPermission ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:Permission ;
+						  ] ;
+
+	# permission*
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Permission/permission" ] ;
+								# joinConditions preliminary and untested
+								rr:objectMap 	[ rr:parentTriplesMap _:Property ;
+												  rr:joinCondition [
+                                                   	 rr:child "ancestor::assetAdministrationShell/identification" ;
+                                                   	 rr:parent "ancestor::/ancestor::assetAdministrationShell/identification" ;
+                                                  ] ;
+												] ;
+							] ;
+
+	# kindOfPermission*				
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Permission/kindOfPermission" ] ;
+								rr:objectMap [ rml:reference "kindOfPermission"] ;
+							] ;
+	.
+#
+
+_:SubjectAttributes a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//subjectAttribute[node()]"
+	] ;
+
+	rr:subjectMap _:fsubjectAttributes ;
+
+	rr:predicateObjectMap [	rr:predicate rdf:type ;
+							rr:object aas:SubjectAttribute ;
+						  ] ;
+
+	# subjectAttribute*					
+	rr:predicateObjectMap 	[	
+								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/SubjectAttributes/subjectAttribute" ] ;
+								# joinConditions preliminary and untested
+								# this objectMap is similar to the one in ObjectAttributes, as Kind ref* seems more appropriate than aggr (spec p.116)
+								rr:objectMap 	[ rr:parentTriplesMap _:Reference ;
+											  	  rr:joinCondition [
+                                                   	rr:child "." ;
+                                                   	rr:parent ".." ;
+                                              ] ;
+										    ] ;
+							] ;
+	.
+#
+
+
+### Function Maps ###
+
+
+_:random a rr:predicateObjectMap ;
+	rr:predicate grel:p_array_a ;
+			rr:objectMap [ 
+				fnml:functionValue [
+					rr:predicateObjectMap [
+						rr:predicate fno:executes ;
+						rr:objectMap [ rr:constant idlab-fn:random ] ;
+					] ;
+					rr:predicateObjectMap [
+						rr:predicate idlab-fn:path ;
+						rr:objectMap [ rml:reference "." ]
+					] ;
+				] ;
+			] ;
+	.
+#
+
+_:separator a rr:predicateObjectMap ;
+    rr:predicate grel:p_string_sep ;
+    rr:objectMap [ rr:constant "/" ] ;
+.
+#
+
+_:join a rr:predicateObjectMap ;
+    rr:predicate fno:executes ;                   
+     rr:objectMap [ rr:constant grel:array_join ]
+.
+#
+
+_:upper a rr:predicateObjectMap ;
+			rr:predicate grel:p_array_a ;
+			rr:objectMap [ 
+				fnml:functionValue [
+					rr:predicateObjectMap [
+						rr:predicate fno:executes ;
+						rr:objectMap [ rr:constant grel:toUpperCase ] ;
+					] ;
+					rr:predicateObjectMap [
+						rr:predicate grel:valueParameter ;
+						rr:objectMap [ rml:reference "." ]
+					] ;
+				] ;
+			] ;
+.
+#
+
+_:fIndex
+	fnml:functionValue [
+		rr:predicateObjectMap [
+			rr:predicate fno:executes ;
+			rr:objectMap [ rr:constant idlab-fn:index ]
+		] ;
+		rr:predicateObjectMap [
+			rr:predicate idlab-fn:path ;
+			rr:objectMap [ rml:reference "node()" ]
+		] ;
+		rr:predicateObjectMap [
+			rr:predicate idlab-fn:filename ;
+			rr:objectMap [ rr:constant "unique_input_filename_placeholder" ]
+		] ;
+	] .
+#
+
+_:fReference
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Reference" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:foperationVariable
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/OperationVariable" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fobjectAttribute
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/ObjectAttributes" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fBlobCertificate
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Certificate" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fSecurity
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Security" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fReferenceElement
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/ReferenceElement" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fFormula
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Formula" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fAccessControl
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AccessControl" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fBlobType
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/BlobType" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fQualifier
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Qualifiable/qualifier" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fdataSpecificationIEC61360
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/DataSpecificationTemplates/DataSpecificationIEC61360/3/0/RC01/DataSpecificationIEC61360" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;	
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fAssetInformation
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetInformation" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fView
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/View" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fExtension
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Extension" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fIRISubmodelElement
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+			rr:predicate grel:p_array_a ;
+			rr:objectMap [ rml:reference "//assetAdministrationShell/identification" ] ;
+		] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap [
+			rr:predicate grel:p_array_a ;
+			rr:objectMap [ rml:reference "ancestor::*/idShort" ] ;
+		] ;
+		# rr:predicateObjectMap [
+		# 	rr:predicate grel:p_array_a ;
+		# 	rr:objectMap [ rml:reference "ancestor::submodelElementCollection/idShort" ] ;
+		# ] ;
+		rr:predicateObjectMap [
+			rr:predicate grel:p_array_a ;
+			rr:objectMap [ rml:reference "idShort" ] ;
+		] ;
+	] .
+#
+
+_:fIRDI
+    fnml:functionValue [
+		rr:predicateObjectMap [
+            rr:predicate fno:executes ;                   
+            rr:objectMap [ rr:constant grel:controls_if ]
+        ] ;
+		rr:predicateObjectMap [
+            rr:predicate grel:bool_b ;
+            rr:objectMap [
+				fnml:functionValue [
+					rr:predicateObjectMap [
+            			rr:predicate fno:executes ;                   
+            			rr:objectMap [ rr:constant idlab-fn:equal ] ;
+        			] ;
+					rr:predicateObjectMap [
+            			rr:predicate grel:valueParameter ;                   
+            			rr:objectMap [ rml:reference "identification/@idType" ] ;
+        			] ;
+					rr:predicateObjectMap [
+            			rr:predicate grel:valueParameter2 ;
+            			rr:objectMap [ rr:constant "IRDI" ]
+					] ;
+				] ;
+			] ;
+		] ;
+		rr:predicateObjectMap [
+            rr:predicate grel:any_true ;
+			rr:objectMap [
+				fnml:functionValue [
+					rr:predicateObjectMap _:join ;
+					rr:predicateObjectMap [
+						rr:predicate grel:p_array_a ;
+						rr:objectMap [ rml:reference "//assetAdministrationShell/identification[@idType!='IRDI']" ] ;
+					] ;
+					rr:predicateObjectMap _:separator ;
+					rr:predicateObjectMap [
+						rr:predicate grel:p_array_a ;
+						rr:objectMap [ rml:reference "idShort" ] ;
+					] ;
+				];
+			] ;
+		] ;
+		rr:predicateObjectMap [
+            rr:predicate grel:any_false ;
+			rr:objectMap [
+				rml:reference "identification" ;
+			] ;
+		] ;
+	] .
+#
+
+_:fKey
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Key" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fIdentifier
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Identifier" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fPermission
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Permission" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fPolicyEnforcementPoints
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PolicyEnforcementPoints" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fPolicyDecisionPoints
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/PolicyDecisionPoint" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fEndpoint
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/Endpoint" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fAdministrativeInformation
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AdministrativeInformation" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fAnnotatedRelationshipElement
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AnnotatedRelationshipElement" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:random ;
+	] .
+#
+
+_:fUpperCaseAssetKind
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/AssetKind" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:upper ;
+	] .
+#
+
+_:fUpperCaseModelingKind
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/ModelingKind" ] # use of /ModelingKind ambiguous in onto
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:upper ;
+	] .
+#
+
+_:fUpperCaseKeyType
+    fnml:functionValue [
+		rr:predicateObjectMap _:join ;
+		rr:predicateObjectMap [
+            rr:predicate grel:p_array_a ;                   
+            rr:objectMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/KeyElements" ]
+        ] ;
+		rr:predicateObjectMap _:separator ;
+		rr:predicateObjectMap _:upper ;
+	] .
+#
+
+
+### "ABSTRACT" MAPS ###
+
+# identifiableMap1
+_:identifiableMap1 a rr:TriplesMap ;
+
+	rml:logicalSource [
+		rml:source "unique_input_filename_placeholder" ;
+		rml:referenceFormulation ql:XPath ;
+		rml:iterator "aasenv//identification[node()]/parent::*"
+	] ;
+
+	rr:subjectMap _:fIRDI;
+
+	# referable (inh.)
+	# HasExtensions (inh.)
+	rr:predicateObjectMap _:HasExtensions_extension ;
+
+	rr:predicateObjectMap _:Referable_idShort ;
+	rr:predicateObjectMap _:Referable_displayName ;
+	rr:predicateObjectMap _:Referable_category ;									
+	rr:predicateObjectMap _:Referable_description ;
+
+	# identifiable
+	rr:predicateObjectMap _:Identifiable_identification ;
+	rr:predicateObjectMap _:Identifiable_administration ;
+
+	.
+# 
+
+
+_:HasExtensions_extension a rr:predicateObjectMap ;
+	rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/HasExtensions/extension" ] ;
+	rr:objectMap 	[ rr:parentTriplesMap _:Extension  ;
+						rr:joinCondition [
+							rr:child "idShort" ;
+							rr:parent "ancestor::extension/parent::*/idShort" ;
+						] ;
+					] ;
+.
+#

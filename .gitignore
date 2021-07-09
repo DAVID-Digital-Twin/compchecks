@@ -3,7 +3,9 @@
 
 # ignore by filetype
 *.ttl
+*.class
 
 # individual files
 !src/compatibility/comp_check.ttl
+!src/transformation/maps/XML2RDF.rml.ttl
 
