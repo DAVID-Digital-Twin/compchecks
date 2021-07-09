@@ -2,10 +2,12 @@
 .venv/
 
 # ignore by filetype
-*.ttl
 *.class
+*.jar
+*.ttl
 
 # individual files
 !src/compatibility/comp_check.ttl
+!src/specs/ontology-supplement.ttl
+!src/transformation/functions/functions.ttl
 !src/transformation/maps/XML2RDF.rml.ttl
-
