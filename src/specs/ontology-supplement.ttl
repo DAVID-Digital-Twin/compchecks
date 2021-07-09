@@ -1,0 +1,26 @@
+# Due to inconsistencies between the rdf-ontology.ttl that has been pulled from https://raw.githubusercontent.com/admin-shell-io/aas-specs/master/schemas/rdf/rdf-ontology.ttl and the specification,
+# the following supplements have been added manually from https://github.com/admin-shell-io/aas-specs/blob/feature/UpdatingToV3.0RC01/schemas/rdf/rdf-ontology.ttl
+
+###  https://admin-shell.io/aas/3/0/RC01/Referable/category
+<https://admin-shell.io/aas/3/0/RC01/Referable/category> rdf:type owl:DatatypeProperty ;
+    rdfs:label "has referable category"^^xsd:string ;
+    rdfs:comment "The category is a value that gives further meta information w.r.t. to the class of the element. It affects the expected existence of attributes and the applicability of constraints."@en ;
+    rdfs:domain aas:Referable ;
+    rdfs:range xsd:string ;
+.
+
+###  https://admin-shell.io/aas/3/0/RC01/Property/valueType
+<https://admin-shell.io/aas/3/0/RC01/Property/valueType> rdf:type owl:ObjectProperty ;
+    rdfs:comment "Data type pf the value."@en ;
+    rdfs:label "has property value type"^^xsd:string ;
+    rdfs:domain aas:Property ;
+    rdfs:range xsd:string ;
+.
+
+###  https://admin-shell.io/aas/3/0/RC01/Range/valueType
+<https://admin-shell.io/aas/3/0/RC01/Range/valueType> rdf:type owl:ObjectProperty ;
+    rdfs:domain aas:Range ;
+    rdfs:range xsd:string ;
+    rdfs:label "has value type of range"^^xsd:string ;
+    rdfs:comment "Data type of the min and max."@en ;
+.

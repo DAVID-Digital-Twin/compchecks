@@ -17,7 +17,7 @@ DELETE {
     ?sm aasida:identification ?id . 
     ?id a aas:Identifier ;
         a owl:NamedIndividual ; 
-        aaside:id ?idval ; 
+        aaside:identifier ?idval ; 
         aaside:idType ?idtval . 
 }
 INSERT {
@@ -32,7 +32,7 @@ WHERE {
         aaskey:value ?val . 
     ?sm a aas:Submodel ;
         aasida:identification ?id . 
-    ?id aaside:id ?idval ; 
+    ?id aaside:identifier ?idval ; 
         aaside:idType ?idtval . 
     ?sm a aas:Submodel . 
     FILTER (STR(?sm) = ?val)
