@@ -24,6 +24,17 @@ compatibility checks based on semantic digital twins
 * run compatibility checks: ```make check```
 * or combined (after setup): ```make compcheck```
 
+## citation (accepted)
+Please use the following bibtex entry:
+```
+@inproceedings{ocker2021ieem,
+author = {Ocker, Felix and Vogel-Heuser, Birgit and Sch{\"o}n, Hauke and Mieth, Robert},
+booktitle = {IEEM},
+publisher = {IEEE},
+title = {{Leveraging Digital Twins for Compatibility Checks in Production Systems Engineering (accepted)}},
+year = {2021}
+}
+```
 
 ## license
 GPL v3.0
