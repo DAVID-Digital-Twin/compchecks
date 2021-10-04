@@ -6,26 +6,26 @@ PREFIX aasrel: <https://admin-shell.io/aas/3/0/RC01/RelationshipElement/>
 PREFIX aaskeyelem: <https://admin-shell.io/aas/3/0/RC01/KeyElements/>
 
 DELETE {
-    ?rel aasrel:second ?ref .
+    ?rel ?ordinal ?ref .
     ?ref a aas:Reference ;
-        aasref:key ?key ; 
-        a owl:NamedIndividual . 
+        aasref:key ?key ;
+        a owl:NamedIndividual .
     ?key a aas:Key ;
         aaskey:value ?val ;
         aaskey:type ?type ;
-        a owl:NamedIndividual . 
+        a owl:NamedIndividual .
 }
 INSERT {
-    ?rel aasrel:second ?aas . 
+    ?rel ?ordinal ?aas .
 }
 WHERE {
-    ?rel a aas:RelationshipElement ; 
-        aasrel:second ?ref .
-    ?ref a aas:Reference ; 
-        aasref:key ?key . 
+    ?rel a aas:RelationshipElement ;
+        ?ordinal ?ref .
+    ?ref a aas:Reference ;
+        aasref:key ?key .
     ?key a aas:Key ;
         aaskey:value ?val ;
         aaskey:type aaskeyelem:ASSETADMINISTRATIONSHELL .
-    ?aas a aas:AssetAdministrationShell . 
+    ?aas a aas:AssetAdministrationShell .
     FILTER (STR(?aas) = ?val)
 }

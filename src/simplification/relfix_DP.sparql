@@ -6,24 +6,24 @@ PREFIX aasrel: <https://admin-shell.io/aas/3/0/RC01/RelationshipElement/>
 PREFIX aaskeyelem: <https://admin-shell.io/aas/3/0/RC01/KeyElements/>
 
 DELETE {
-    ?rel aasrel:second ?ref .
+    ?rel ?ordinal ?ref .
     ?ref a aas:Reference ;
-        aasref:key ?key ; 
-        a owl:NamedIndividual . 
+        aasref:key ?key ;
+        a owl:NamedIndividual .
     ?key a aas:Key ;
         aaskey:value ?val ;
         aaskey:type ?type ;
-        a owl:NamedIndividual . 
+        a owl:NamedIndividual .
 }
 INSERT {
-    aasrel:secondValue a owl:DatatypeProperty . 
-    ?rel aasrel:secondValue ?val . 
+    ?value a owl:DatatypeProperty .
+    ?rel ?value ?val .
 }
 WHERE {
-    ?rel a aas:RelationshipElement ; 
-        aasrel:second ?ref .
-    ?ref a aas:Reference ; 
-        aasref:key ?key . 
+    ?rel a aas:RelationshipElement ;
+        ?ordinal ?ref .
+    ?ref a aas:Reference ;
+        aasref:key ?key .
     ?key a aas:Key ;
         aaskey:value ?val ;
         aaskey:type aaskeyelem:GLOBALREFERENCE .

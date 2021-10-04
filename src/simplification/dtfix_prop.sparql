@@ -2,15 +2,15 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX aasprop: <https://admin-shell.io/aas/3/0/RC01/Property/>
 
 DELETE {
-    ?prop aasprop:value ?val ; 
+    ?prop aasprop:value ?val ;
         aasprop:valueType ?valtype .
 }
 INSERT {
-    ?prop aasprop:value ?properval . 
+    ?prop aasprop:value ?properval .
 }
 WHERE {
-    ?prop aasprop:value ?val ; 
+    ?prop aasprop:value ?val ;
         aasprop:valueType ?valtype .
-    FILTER (?valtype = "float")
-    BIND(STRDT(STR(?val), xsd:float) AS ?properval)
+    FILTER (?valtype = ?dtype)
+    BIND(STRDT(STR(?val), ?xsdType) AS ?properval)
 }

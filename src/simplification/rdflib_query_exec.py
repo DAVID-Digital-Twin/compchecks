@@ -13,21 +13,38 @@ def simplify_aas_graph(aasfile, output, *updatequeries):
     """
     g = rdflib.Graph()
     g.parse(aasfile, format="ttl")
+    bindings = prebind()
     for uq in updatequeries:
-        g.update(load_query(uq))
+        g.update(load_query(uq), initBindings={'ordinal': bindings["first"], 'value': bindings["firstValue"] })
+        g.update(load_query(uq), initBindings={'ordinal': bindings["second"], 'value': bindings["secondValue"] })
+        g.update(load_query(uq), initBindings={'xsdType': bindings["float"], 'dtype': rdflib.Literal('float')})
+        g.update(load_query(uq), initBindings={'xsdType': bindings["integer"], 'dtype': rdflib.Literal('integer')})
+        g.update(load_query(uq), initBindings={'xsdType': bindings["string"], 'dtype': rdflib.Literal('string')})
     g.serialize(destination=output, format="turtle")
 
 def simplify_several(inputs):
     """
     :inputs: ttl files
     """
-    querynames = ["keyfix", "semanticidfix", "dataspecfix",\
-                  "relfix_first_DP", "relfix_first_OP", "relfix_second_DP", "relfix_second_OP",\
-                  "dtfix_prop_int", "dtfix_prop_float", "dtfix_prop_str",\
-                  "dtfix_range_int", "dtfix_range_float", "dtfix_range_str"]
+    querynames = ["keyfix","semanticidfix", "dataspecfix",\
+                  "relfix_DP", "relfix_OP",\
+                  "dtfix_prop",\
+                  "dtfix_range"]
     queries = [s + ".sparql" for s in querynames]
     for i in inputs:
         simplify_aas_graph(i, "_"+ i, *queries)
+
+
+def prebind():
+    prebindings = { "float": rdflib.URIRef("http://www.w3.org/2001/XMLSchema#float"),
+                    "integer": rdflib.URIRef("http://www.w3.org/2001/XMLSchema#integer"),
+                    "string": rdflib.URIRef("http://www.w3.org/2001/XMLSchema#string"),
+                    "first": rdflib.URIRef("https://admin-shell.io/aas/3/0/RC01/RelationshipElement/first"),
+                    "firstValue": rdflib.URIRef("https://admin-shell.io/aas/3/0/RC01/RelationshipElement/firstValue"),
+                    "second": rdflib.URIRef("https://admin-shell.io/aas/3/0/RC01/RelationshipElement/second"),
+                    "secondValue": rdflib.URIRef("https://admin-shell.io/aas/3/0/RC01/RelationshipElement/secondValue"),
+                    }
+    return prebindings
 
 if __name__ == "__main__":
     simplify_several(sys.argv[1:])
