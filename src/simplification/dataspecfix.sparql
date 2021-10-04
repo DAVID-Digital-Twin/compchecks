@@ -1,30 +1,24 @@
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX aas: <https://admin-shell.io/aas/3/0/RC01/>
-PREFIX aasaas: <https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/>
-PREFIX aasref: <https://admin-shell.io/aas/3/0/RC01/Reference/>
-PREFIX aaskey: <https://admin-shell.io/aas/3/0/RC01/Key/>
-PREFIX aasdata: <https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/>
 
 DELETE {
-    ?aas aasdata:dataSpecification ?ds . 
-    ?ds a aas:Reference ; 
-        aasref:key ?key ; 
+    ?aas aasdata:dataSpecification ?ds .
+    ?ds a aas:Reference ;
+        aasref:key ?key ;
         a owl:NamedIndividual .
     ?key a aas:Key ;
         aaskey:value ?val ;
         aaskey:type ?type ;
         aaskey:idType ?idType ;
-        a owl:NamedIndividual . 
+        a owl:NamedIndividual .
 }
 INSERT {
-    aasdata:semanticIdValue a owl:DatatypeProperty . 
-    ?aas aasdata:semanticIdValue ?val . 
+    aasdata:semanticIdValue a owl:DatatypeProperty .
+    ?aas aasdata:semanticIdValue ?val .
 }
 WHERE {
-    ?aas a aas:AssetAdministrationShell ; 
-        aasdata:dataSpecification ?ds . 
-    ?ds a aas:Reference ; 
-        aasref:key ?key . 
+    ?aas a aas:AssetAdministrationShell ;
+        aasdata:dataSpecification ?ds .
+    ?ds a aas:Reference ;
+        aasref:key ?key .
     ?key a aas:Key ;
-        aaskey:value ?val . 
+        aaskey:value ?val .
 }

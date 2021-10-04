@@ -13,6 +13,7 @@ def simplify_aas_graph(aasfile, output, *updatequeries):
     """
     g = rdflib.Graph()
     g.parse(aasfile, format="ttl")
+    bind_namespace(g)
     bindings = prebind()
     for uq in updatequeries:
         g.update(load_query(uq), initBindings={'ordinal': bindings["first"], 'value': bindings["firstValue"] })
@@ -34,6 +35,21 @@ def simplify_several(inputs):
     for i in inputs:
         simplify_aas_graph(i, "_"+ i, *queries)
 
+def bind_namespace(graph):
+    graph.namespace_manager.bind('aas', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/'))
+    graph.namespace_manager.bind('aasaas', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/'))
+    graph.namespace_manager.bind('aasdata', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/HasDataSpecification/'))
+    graph.namespace_manager.bind('aasida', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/Identifiable/'))
+    graph.namespace_manager.bind('aaside', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/Identifier/'))
+    graph.namespace_manager.bind('aaskey', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/Key/'))
+    graph.namespace_manager.bind('aaskeyelem', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/KeyElements/'))
+    graph.namespace_manager.bind('aasprop', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/Property/'))
+    graph.namespace_manager.bind('aasrange', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/Range/'))
+    graph.namespace_manager.bind('aasref', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/Reference/'))
+    graph.namespace_manager.bind('aasrel', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/RelationshipElement/'))
+    graph.namespace_manager.bind('aassem', rdflib.URIRef('https://admin-shell.io/aas/3/0/RC01/HasSemantics/'))
+    graph.namespace_manager.bind('owl', rdflib.URIRef('http://www.w3.org/2002/07/owl#'))
+    graph.namespace_manager.bind('xsd', rdflib.URIRef('http://www.w3.org/2001/XMLSchema#'))
 
 def prebind():
     prebindings = { "float": rdflib.URIRef("http://www.w3.org/2001/XMLSchema#float"),

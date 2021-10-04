@@ -1,5 +1,3 @@
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX aasrange: <https://admin-shell.io/aas/3/0/RC01/Range/>
 
 DELETE {
     ?prop aasrange:min ?min ;

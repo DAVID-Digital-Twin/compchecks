@@ -1,5 +1,3 @@
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX aasprop: <https://admin-shell.io/aas/3/0/RC01/Property/>
 
 DELETE {
     ?prop aasprop:value ?val ;

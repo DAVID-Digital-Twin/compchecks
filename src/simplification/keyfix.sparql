@@ -1,39 +1,32 @@
-PREFIX aas: <https://admin-shell.io/aas/3/0/RC01/>
-PREFIX aasaas: <https://admin-shell.io/aas/3/0/RC01/AssetAdministrationShell/>
-PREFIX aasref: <https://admin-shell.io/aas/3/0/RC01/Reference/>
-PREFIX aaskey: <https://admin-shell.io/aas/3/0/RC01/Key/>
-PREFIX aasida: <https://admin-shell.io/aas/3/0/RC01/Identifiable/>
-PREFIX aaside: <https://admin-shell.io/aas/3/0/RC01/Identifier/>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
 
 DELETE {
-    ?aas aasaas:submodel ?ref . 
+    ?aas aasaas:submodel ?ref .
     ?ref a aas:Reference ;
-        aasref:key ?key ; 
-        a owl:NamedIndividual . 
+        aasref:key ?key ;
+        a owl:NamedIndividual .
     ?key a aas:Key ;
         aaskey:value ?val ;
-        a owl:NamedIndividual . 
-    ?sm aasida:identification ?id . 
+        a owl:NamedIndividual .
+    ?sm aasida:identification ?id .
     ?id a aas:Identifier ;
-        a owl:NamedIndividual ; 
-        aaside:identifier ?idval ; 
-        aaside:idType ?idtval . 
+        a owl:NamedIndividual ;
+        aaside:identifier ?idval ;
+        aaside:idType ?idtval .
 }
 INSERT {
-    ?aas aasaas:submodel ?sm . 
+    ?aas aasaas:submodel ?sm .
 }
 WHERE {
-    ?aas a aas:AssetAdministrationShell ; 
+    ?aas a aas:AssetAdministrationShell ;
         aasaas:submodel ?ref .
     ?ref a aas:Reference ;
-        aasref:key ?key . 
+        aasref:key ?key .
     ?key a aas:Key ;
-        aaskey:value ?val . 
+        aaskey:value ?val .
     ?sm a aas:Submodel ;
-        aasida:identification ?id . 
-    ?id aaside:identifier ?idval ; 
-        aaside:idType ?idtval . 
-    ?sm a aas:Submodel . 
+        aasida:identification ?id .
+    ?id aaside:identifier ?idval ;
+        aaside:idType ?idtval .
+    ?sm a aas:Submodel .
     FILTER (STR(?sm) = ?val)
 }
