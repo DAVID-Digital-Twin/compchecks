@@ -46,9 +46,9 @@ simplify:
 	cd src/simplification && cp ../../data/*.ttl . && ../../.venv/bin/python rdflib_query_exec.py _direct.ttl _eclass.ttl && rm _direct.ttl _eclass.ttl && mv *.ttl ../../data
 
 ## check	: run compatibility checks
-check: data/__direct.ttl data/__eclass.ttl
-	cd src/compatibility && cp ../../data/__direct.ttl . && ../../.venv/bin/python rdflib_shape_val.py __direct.ttl && rm ./__direct.ttl ;\
-	cp ../../data/__eclass.ttl . && ../../.venv/bin/python rdflib_query_exec.py __eclass.ttl && rm ./__eclass.ttl
+check:
+	cd src/compatibility && bash check.sh
+
 
 .PHONY : help
 help : Makefile
