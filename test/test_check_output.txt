@@ -1,0 +1,7 @@
+results for __direct.ttl:
+True
+Validation Report
+Conforms: True
+
+results for __eclass.ttl:
+['https://example.com/ids/aas/3335_3111_5012_7479', 'https://example.com/ids/aas/1035_3111_5012_8830']

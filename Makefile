@@ -49,6 +49,9 @@ simplify:
 check:
 	cd src/compatibility && bash check.sh
 
+## test_check	: compare compatibility checks results with expected compatibility checks results
+test_check:
+	cd test && bash test.sh
 
 .PHONY : help
 help : Makefile
