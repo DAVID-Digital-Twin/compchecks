@@ -11,6 +11,7 @@ compatibility checks based on semantic digital twins
   * compatibility: SPARQL query and SHACL shape for checking compatibility; Python module for easy execution using RDFLib
   * xml2ttl.sh: helper script for running the transformation
 * data: AAS XML input files
+* test: very basic test
 
 ## requirements
 * Python 3.8.3+
@@ -23,6 +24,7 @@ compatibility checks based on semantic digital twins
 * simplify example graphs: ```make simplify```
 * run compatibility checks: ```make check```
 * or combined (after setup): ```make compcheck```
+* compare compcheck results with expected results: ```make test_check```
 
 ## citation (accepted)
 Please use the following bibtex entry:
