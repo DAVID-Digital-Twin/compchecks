@@ -2292,7 +2292,7 @@ _:key_idTypeMap a rr:predicateObjectMap ;
 	rr:objectMap 	[ rr:parentTriplesMap _:key_idType ;
 						rr:joinCondition [
                         rr:child "." ;
-                        rr:parent "." ;
+                        rr:parent "parent::key" ;
                         ] ;
 					] ;
 	.
