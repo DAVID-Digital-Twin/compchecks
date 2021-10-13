@@ -1460,12 +1460,16 @@ _:File a rr:TriplesMap ;
 	# value
 	rr:predicateObjectMap 	[
 								rr:predicateMap [ rr:constant "https://admin-shell.io/aas/3/0/RC01/File/value" ] ;
-								rr:objectMap 	[ rr:parentTriplesMap _:pathType ;
-								 				  rr:joinCondition [
-                                                   	 rr:child "ancestor-or-self::*/idShort" ;
-                                                   	 rr:parent "ancestor::*/idShort" ;
-                                                  ] ;
-												] ;
+								rr:objectMap 	[
+													rml:reference "value" ;
+													rr:datatype xsd:string ;
+												]
+								# rr:objectMap 	[ rr:parentTriplesMap _:pathType ;
+								#  				  rr:joinCondition [
+                                #                    	 rr:child "ancestor-or-self::*/idShort" ;
+                                #                    	 rr:parent "ancestor::*/idShort" ;
+                                #                   ] ;
+								# 				] ;
 							] ;
 	#
 
